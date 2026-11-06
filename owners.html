@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Owners — Pages & Pour</title>
+  <meta name="description" content="Pages & Pour is an educational bookstore with a coffee shop and study spot: books, school materials, and a comfortable place to learn, all in one place. One Place. Every Page. Every Pour." />
+  <link rel="icon" href="assets/logo-mark-clear.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="nav solid">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/logo-mark-clear.png" alt="Pages & Pour mark" />
+        Pages & Pour
+      </a>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="offerings.html">Offerings</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="owners.html">Owners</a></li>
+        <li><a href="brand.html">Brand</a></li>
+        <li><a class="nav-cta" href="visit.html">Visit</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="top">
+    <section id="owners" class="page-first watermark" data-watermark="Pages">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">The owners</p>
+          <h1 class="page-title">The people behind Pages & Pour.</h1>
+        </div>
+        <div class="owners">
+          <article class="owner">
+            <img loading="lazy" decoding="async" src="assets/owner-john.jpg" alt="Portrait of John Ruzzel V. Sansait" data-zoom />
+            <div class="owner-copy">
+              <h3>John Ruzzel V. Sansait</h3>
+            </div>
+          </article>
+          <article class="owner">
+            <img loading="lazy" decoding="async" src="assets/owner-stephanie.jpg" alt="Portrait of Stephanie Claire M. Caingcoy" data-zoom />
+            <div class="owner-copy">
+              <h3>Stephanie Claire M. Caingcoy</h3>
+            </div>
+          </article>
+          <article class="owner">
+            <div class="owner-placeholder" role="img" aria-label="Photo of Mark Ian Mudlong coming soon">MM</div>
+            <div class="owner-copy">
+              <h3>Mark Ian Mudlong</h3>
+            </div>
+          </article>
+          <article class="owner">
+            <div class="owner-placeholder" role="img" aria-label="Photo of Carlos Aurelius Gervacio coming soon">CG</div>
+            <div class="owner-copy">
+              <h3>Carlos Aurelius Gervacio</h3>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer reveal fade">
+    <img loading="lazy" decoding="async" src="assets/logo-mark-clear.png" alt="" />
+    <p>Pages & Pour · An Educational Bookstore with a Coffee Shop · Est. 2026</p>
+    <p>One Place. Every Page. Every Pour.</p>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="offerings.html">Offerings</a>
+      <a href="menu.html">Menu</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="owners.html">Owners</a>
+      <a href="brand.html">Brand</a>
+      <a href="visit.html">Visit</a>
+      <a href="visit.html#contactForm" data-action="contact">Contact</a>
+    </div>
+    <div class="footer-social" id="footerSocial"></div>
+  </footer>
+
+  <button class="to-top" id="toTop" type="button" aria-label="Back to top">↑</button>
+  <div class="toast" id="toast" role="status"></div>
+  <dialog class="lightbox" id="lightbox" aria-label="Image preview">
+    <button class="btn btn-small lightbox-close" type="button" id="lightboxClose">Close</button>
+    <button class="lightbox-nav prev" type="button" id="lightboxPrev" aria-label="Previous image">‹</button>
+    <figure>
+      <img loading="lazy" decoding="async" id="lightboxImg" alt="" />
+      <figcaption id="lightboxCaption"></figcaption>
+    </figure>
+    <button class="lightbox-nav next" type="button" id="lightboxNext" aria-label="Next image">›</button>
+  </dialog>
+
+  <script src="site-data.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>

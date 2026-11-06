@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visit — Pages & Pour</title>
+  <meta name="description" content="Pages & Pour is an educational bookstore with a coffee shop and study spot: books, school materials, and a comfortable place to learn, all in one place. One Place. Every Page. Every Pour." />
+  <link rel="icon" href="assets/logo-mark-clear.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="nav solid">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/logo-mark-clear.png" alt="Pages & Pour mark" />
+        Pages & Pour
+      </a>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="offerings.html">Offerings</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="owners.html">Owners</a></li>
+        <li><a href="brand.html">Brand</a></li>
+        <li><a class="nav-cta" href="visit.html">Visit</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="top">
+    <section id="visit" class="page-first">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">Location & contact</p>
+          <h1 class="page-title">Books, coffee, and a place to study — in one location.</h1>
+        </div>
+        <div class="visit-grid">
+          <div class="visit-info reveal from-left">
+            <p class="eyebrow">Find us</p>
+            <p class="visit-address" id="contactAddress"></p>
+            <p class="facility-line">Wi-Fi · Charging outlets · Printing · Photocopying</p>
+            <dl class="contact-list" id="contactList"></dl>
+            <div class="inline-actions">
+              <a class="btn" href="visit.html" data-action="directions">Get Directions</a>
+              <a class="btn btn-ghost" href="visit.html#contactForm" data-action="contact">Contact Us</a>
+            </div>
+          </div>
+          <div class="map-frame reveal from-right" id="mapFrame">
+            <img loading="lazy" decoding="async" class="visit-photo" src="assets/hero-cafe.jpg" alt="Café table by the window" />
+          </div>
+        </div>
+
+        <div class="contact-split">
+          <div class="reveal from-left">
+            <p class="eyebrow">Contact us</p>
+            <h3 class="contact-title">Send us a message.</h3>
+            <p>Questions about books, the menu, study spots, printing, or membership? Leave a message below.</p>
+          </div>
+          <form class="form reveal from-right" id="contactForm" novalidate>
+            <label>Name <input name="name" required autocomplete="name" minlength="2" /></label>
+            <span class="field-error" data-for="name"></span>
+            <label>Email <input name="email" type="email" required autocomplete="email" /></label>
+            <span class="field-error" data-for="email"></span>
+            <label>Subject
+              <select name="subject" required>
+                <option value="">Choose a subject</option>
+                <option>General inquiry</option>
+                <option>Books & School Materials</option>
+                <option>Coffee, Tea & Light Meals</option>
+                <option>Study Spot Access</option>
+                <option>Printing & Document Services</option>
+                <option>Pages & Pour Membership</option>
+                <option>Creative Corner</option>
+              </select>
+            </label>
+            <span class="field-error" data-for="subject"></span>
+            <label>Message <textarea name="message" required minlength="10"></textarea></label>
+            <span class="field-error" data-for="message"></span>
+            <button class="btn" type="submit">Send Message</button>
+            <p class="form-note" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="feedback">
+      <div class="wrap feedback-grid">
+        <div class="reveal from-left">
+          <div class="section-head">
+            <p class="eyebrow">Customer feedback</p>
+            <h2>Tell us about your visit.</h2>
+          </div>
+          <form class="form" id="feedbackForm" novalidate>
+            <label>Name <input name="name" required autocomplete="name" minlength="2" /></label>
+            <span class="field-error" data-for="name"></span>
+            <fieldset class="rating">
+              <legend>Rating</legend>
+              <div class="stars">
+                <input type="radio" id="r5" name="rating" aria-label="5 stars" value="5" required /><label for="r5" title="5 stars">★</label>
+                <input type="radio" id="r4" name="rating" aria-label="4 stars" value="4" /><label for="r4" title="4 stars">★</label>
+                <input type="radio" id="r3" name="rating" aria-label="3 stars" value="3" /><label for="r3" title="3 stars">★</label>
+                <input type="radio" id="r2" name="rating" aria-label="2 stars" value="2" /><label for="r2" title="2 stars">★</label>
+                <input type="radio" id="r1" name="rating" aria-label="1 star" value="1" /><label for="r1" title="1 star">★</label>
+              </div>
+            </fieldset>
+            <span class="field-error" data-for="rating"></span>
+            <label>Comment <textarea name="comment" required minlength="5"></textarea></label>
+            <span class="field-error" data-for="comment"></span>
+            <button class="btn" type="submit">Submit Feedback</button>
+            <p class="form-note" aria-live="polite"></p>
+          </form>
+        </div>
+        <div class="reveal from-right">
+          <div class="feedback-summary" id="feedbackSummary"></div>
+          <ul class="feedback-list" id="feedbackList"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer reveal fade">
+    <img loading="lazy" decoding="async" src="assets/logo-mark-clear.png" alt="" />
+    <p>Pages & Pour · An Educational Bookstore with a Coffee Shop · Est. 2026</p>
+    <p>One Place. Every Page. Every Pour.</p>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="offerings.html">Offerings</a>
+      <a href="menu.html">Menu</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="owners.html">Owners</a>
+      <a href="brand.html">Brand</a>
+      <a href="visit.html">Visit</a>
+      <a href="visit.html#contactForm" data-action="contact">Contact</a>
+    </div>
+    <div class="footer-social" id="footerSocial"></div>
+  </footer>
+
+  <button class="to-top" id="toTop" type="button" aria-label="Back to top">↑</button>
+  <div class="toast" id="toast" role="status"></div>
+  <dialog class="lightbox" id="lightbox" aria-label="Image preview">
+    <button class="btn btn-small lightbox-close" type="button" id="lightboxClose">Close</button>
+    <button class="lightbox-nav prev" type="button" id="lightboxPrev" aria-label="Previous image">‹</button>
+    <figure>
+      <img loading="lazy" decoding="async" id="lightboxImg" alt="" />
+      <figcaption id="lightboxCaption"></figcaption>
+    </figure>
+    <button class="lightbox-nav next" type="button" id="lightboxNext" aria-label="Next image">›</button>
+  </dialog>
+
+  <script src="site-data.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
