@@ -81,7 +81,7 @@ h1, h2, .display {
   line-height: 1.08;
 }
 
-h2, .page-title { font-size: clamp(2.2rem, 4.2vw, 3.6rem); }
+h2 { font-size: clamp(2.2rem, 4.2vw, 3.6rem); }
 
 h3 {
   font-family: "Fraunces", serif;
@@ -121,7 +121,6 @@ p { color: #4a342c; }
 }
 
 .nav.scrolled,
-.nav.solid,
 .nav.menu-open {
   background: rgba(247, 240, 230, 0.96);
   backdrop-filter: blur(16px);
@@ -417,7 +416,14 @@ section { padding: 120px 0; scroll-margin-top: 88px; }
 
 #concept { padding: 0 0 120px; }
 
-#top > .page-first { padding-top: 168px; }
+.include-error {
+  width: min(1180px, calc(100% - 48px));
+  margin: 96px auto 0;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: var(--cream);
+  color: var(--wine);
+}
 
 .section-head {
   display: grid;
@@ -443,7 +449,7 @@ section { padding: 120px 0; scroll-margin-top: 88px; }
   max-width: 640px;
 }
 
-.split-copy h2, .split-copy .page-title { font-size: clamp(2rem, 3.4vw, 3rem); }
+.split-copy h2 { font-size: clamp(2rem, 3.4vw, 3rem); }
 
 .story-photo {
   width: 100%;
@@ -522,7 +528,7 @@ section { padding: 120px 0; scroll-margin-top: 88px; }
 }
 
 .dark p, .dark .eyebrow { color: var(--beige); }
-.dark h2, .dark .page-title { color: var(--white); }
+.dark h2 { color: var(--white); }
 
 .process {
   display: grid;
@@ -1782,7 +1788,7 @@ a.btn:focus-visible::after {
   #poster { background: var(--paper); }
   .poster-grid .post-visual { order: 0; }
   .watermark::before { top: 24px; font-size: 7rem; }
-  h2, .page-title { font-size: clamp(1.9rem, 7vw, 2.6rem); }
+  h2 { font-size: clamp(1.9rem, 7vw, 2.6rem); }
   .menu-board { columns: 1; }
   .menu-head { margin-bottom: 32px; }
   .filters {

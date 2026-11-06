@@ -1,0 +1,33 @@
+<section id="feedback">
+  <div class="wrap feedback-grid">
+    <div class="reveal from-left">
+      <div class="section-head">
+        <p class="eyebrow">Customer feedback</p>
+        <h2>Tell us about your visit.</h2>
+      </div>
+      <form class="form" id="feedbackForm" novalidate>
+        <label>Name <input name="name" required autocomplete="name" minlength="2" /></label>
+        <span class="field-error" data-for="name"></span>
+        <fieldset class="rating">
+          <legend>Rating</legend>
+          <div class="stars">
+            <input type="radio" id="r5" name="rating" aria-label="5 stars" value="5" required /><label for="r5" title="5 stars">★</label>
+            <input type="radio" id="r4" name="rating" aria-label="4 stars" value="4" /><label for="r4" title="4 stars">★</label>
+            <input type="radio" id="r3" name="rating" aria-label="3 stars" value="3" /><label for="r3" title="3 stars">★</label>
+            <input type="radio" id="r2" name="rating" aria-label="2 stars" value="2" /><label for="r2" title="2 stars">★</label>
+            <input type="radio" id="r1" name="rating" aria-label="1 star" value="1" /><label for="r1" title="1 star">★</label>
+          </div>
+        </fieldset>
+        <span class="field-error" data-for="rating"></span>
+        <label>Comment <textarea name="comment" required minlength="5"></textarea></label>
+        <span class="field-error" data-for="comment"></span>
+        <button class="btn" type="submit">Submit Feedback</button>
+        <p class="form-note" aria-live="polite"></p>
+      </form>
+    </div>
+    <div class="reveal from-right">
+      <div class="feedback-summary" id="feedbackSummary"></div>
+      <ul class="feedback-list" id="feedbackList"></ul>
+    </div>
+  </div>
+</section>

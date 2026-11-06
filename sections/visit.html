@@ -1,0 +1,54 @@
+<section id="visit">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Location & contact</p>
+      <h2>Books, coffee, and a place to study — in one location.</h2>
+    </div>
+    <div class="visit-grid">
+      <div class="visit-info reveal from-left">
+        <p class="eyebrow">Find us</p>
+        <p class="visit-address" id="contactAddress"></p>
+        <p class="facility-line">Wi-Fi · Charging outlets · Printing · Photocopying</p>
+        <dl class="contact-list" id="contactList"></dl>
+        <div class="inline-actions">
+          <a class="btn" href="#visit" data-action="directions">Get Directions</a>
+          <a class="btn btn-ghost" href="#contactForm" data-action="contact">Contact Us</a>
+        </div>
+      </div>
+      <div class="map-frame reveal from-right" id="mapFrame">
+        <img loading="lazy" decoding="async" class="visit-photo" src="assets/hero-cafe.jpg" alt="Café table by the window" />
+      </div>
+    </div>
+
+    <div class="contact-split">
+      <div class="reveal from-left">
+        <p class="eyebrow">Contact us</p>
+        <h3 class="contact-title">Send us a message.</h3>
+        <p>Questions about books, the menu, study spots, printing, or membership? Leave a message below.</p>
+      </div>
+      <form class="form reveal from-right" id="contactForm" novalidate>
+        <label>Name <input name="name" required autocomplete="name" minlength="2" /></label>
+        <span class="field-error" data-for="name"></span>
+        <label>Email <input name="email" type="email" required autocomplete="email" /></label>
+        <span class="field-error" data-for="email"></span>
+        <label>Subject
+          <select name="subject" required>
+            <option value="">Choose a subject</option>
+            <option>General inquiry</option>
+            <option>Books & School Materials</option>
+            <option>Coffee, Tea & Light Meals</option>
+            <option>Study Spot Access</option>
+            <option>Printing & Document Services</option>
+            <option>Pages & Pour Membership</option>
+            <option>Creative Corner</option>
+          </select>
+        </label>
+        <span class="field-error" data-for="subject"></span>
+        <label>Message <textarea name="message" required minlength="10"></textarea></label>
+        <span class="field-error" data-for="message"></span>
+        <button class="btn" type="submit">Send Message</button>
+        <p class="form-note" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>

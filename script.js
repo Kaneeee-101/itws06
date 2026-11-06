@@ -32,10 +32,8 @@ document.addEventListener("keydown", (event) => {
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const parallaxNodes = [...document.querySelectorAll("[data-parallax]")];
-const currentPage = location.pathname.split("/").pop() || "index.html";
-links?.querySelectorAll("a").forEach((a) => {
-  if (a.getAttribute("href") === currentPage) a.setAttribute("aria-current", "page");
-});
+const sections = [...document.querySelectorAll("main section[id], #top")];
+const navAnchors = [...document.querySelectorAll(".nav-links a[href^='#']")];
 const SCENE_SELECTOR = ".hero, .watermark, .media-reveal, .post-visual, .image-band, .market, .value";
 const visibleScenes = new Set();
 let ticking = false;
@@ -146,6 +144,16 @@ const paintScroll = () => {
     });
     paintScenes();
   }
+
+  let current = "top";
+  sections.forEach((section) => {
+    if (section.getBoundingClientRect().top <= 120) current = section.id || "top";
+  });
+  navAnchors.forEach((a) => {
+    const id = a.getAttribute("href")?.slice(1);
+    if (id === current) a.setAttribute("aria-current", "true");
+    else a.removeAttribute("aria-current");
+  });
 
   ticking = false;
 };
