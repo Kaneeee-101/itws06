@@ -8,38 +8,37 @@ window.SITE_DATA = {
     { id: "pastries", label: "Pastries & Snacks" },
   ],
 
-  // price: number in PHP, or null until the actual price is provided.
+  // price: number in PHP (₱).
   // Items follow the Pages & Pour product catalog.
   menu: [
-    { category: "books", name: "Novels", description: "", price: null, image: "assets/products/book-secrets-lost-woods.png" },
-    { category: "books", name: "Review Books", description: "", price: null, image: "assets/products/book-education-challenges.png" },
-    { category: "books", name: "Journals", description: "", price: null, image: "assets/products/journal-leather.jpg" },
-    { category: "books", name: "Notebooks", description: "", price: null, image: "assets/products/book-extra-02.jpg" },
-    { category: "books", name: "Bookmarks", description: "", price: null, image: "assets/products/bookmark-set.png" },
-    { category: "books", name: "Pens", description: "", price: null, image: "assets/products/stationery-flatlay.jpg" },
+    { category: "books", name: "Novels", description: "", price: 299, image: "assets/products/book-secrets-lost-woods.png" },
+    { category: "books", name: "Review Books", description: "", price: 450, image: "assets/products/book-education-challenges.png" },
+    { category: "books", name: "Journals", description: "", price: 199, image: "assets/products/journal-leather.jpg" },
+    { category: "books", name: "Notebooks", description: "", price: 89, image: "assets/products/book-extra-02.jpg" },
+    { category: "books", name: "Bookmarks", description: "", price: 49, image: "assets/products/bookmark-set.png" },
+    { category: "books", name: "Pens", description: "", price: 35, image: "assets/products/stationery-flatlay.jpg" },
 
-    { category: "coffee", name: "Iced Latte", description: "", price: null, image: "assets/products/coffee-iced-latte.jpg" },
-    { category: "coffee", name: "Caramel Macchiato", description: "", price: null, image: "assets/products/coffee-caramel-drizzle.jpg" },
-    { category: "coffee", name: "Café Mocha", description: "", price: null, image: "assets/products/coffee-mocha.jpg" },
-    { category: "coffee", name: "Spanish Latte", description: "", price: null, image: "assets/products/coffee-spanish-latte.jpg" },
-    { category: "coffee", name: "Hot Cappuccino", description: "", price: null, image: "assets/products/hot-coffee.png" },
+    { category: "coffee", name: "Iced Latte", description: "", price: 140, image: "assets/products/coffee-iced-latte.jpg" },
+    { category: "coffee", name: "Caramel Macchiato", description: "", price: 160, image: "assets/products/coffee-caramel-drizzle.jpg" },
+    { category: "coffee", name: "Café Mocha", description: "", price: 155, image: "assets/products/coffee-mocha.jpg" },
+    { category: "coffee", name: "Spanish Latte", description: "", price: 150, image: "assets/products/coffee-spanish-latte.jpg" },
+    { category: "coffee", name: "Hot Cappuccino", description: "", price: 130, image: "assets/products/hot-coffee.png" },
 
-    { category: "non-coffee", name: "Matcha Latte", description: "", price: null, image: "assets/products/coffee-caramel.jpg" },
-    { category: "non-coffee", name: "Milk Tea", description: "", price: null, image: "assets/products/coffee-spanish-latte.jpg" },
-    { category: "non-coffee", name: "Chocolate Drink", description: "", price: null, image: "assets/products/iced-coffee.png" },
-    { category: "non-coffee", name: "Fruit Tea", description: "", price: null, image: "assets/products/coffee-iced-latte.jpg" },
+    { category: "non-coffee", name: "Matcha Latte", description: "", price: 150, image: "assets/products/coffee-caramel.jpg" },
+    { category: "non-coffee", name: "Milk Tea", description: "", price: 120, image: "assets/products/coffee-spanish-latte.jpg" },
+    { category: "non-coffee", name: "Chocolate Drink", description: "", price: 130, image: "assets/products/iced-coffee.png" },
+    { category: "non-coffee", name: "Fruit Tea", description: "", price: 110, image: "assets/products/coffee-iced-latte.jpg" },
 
-    { category: "pastries", name: "Croissants", description: "", price: null, image: "assets/products/pastry-croissant.jpg" },
-    { category: "pastries", name: "Brownies", description: "", price: null, image: "assets/products/pastry-chocolate-cake.jpg" },
-    { category: "pastries", name: "Cookies", description: "", price: null, image: "assets/products/pastry-cookies.jpg" },
-    { category: "pastries", name: "Cinnamon Rolls", description: "", price: null, image: "assets/products/pastry-cinnamon-rolls.jpg" },
-    { category: "pastries", name: "Sandwiches", description: "", price: null, image: "assets/products/croissant-sandwich.png" },
+    { category: "pastries", name: "Croissants", description: "", price: 85, image: "assets/products/pastry-croissant.jpg" },
+    { category: "pastries", name: "Brownies", description: "", price: 75, image: "assets/products/pastry-chocolate-cake.jpg" },
+    { category: "pastries", name: "Cookies", description: "", price: 55, image: "assets/products/pastry-cookies.jpg" },
+    { category: "pastries", name: "Cinnamon Rolls", description: "", price: 95, image: "assets/products/pastry-cinnamon-rolls.jpg" },
+    { category: "pastries", name: "Sandwiches", description: "", price: 145, image: "assets/products/croissant-sandwich.png" },
   ],
 
   contact: {
     address: "34 Kape St., Brgy. Bookelya",
-    // Google Maps search text or place name; leave empty until the real location is confirmed.
-    mapQuery: "",
+    mapQuery: "34 Kape St., Brgy. Bookelya",
     // Example: [{ days: "Monday – Friday", time: "8:00 AM – 9:00 PM" }]
     hours: [],
     phone: "",

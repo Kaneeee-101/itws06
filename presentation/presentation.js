@@ -4,6 +4,8 @@ const counter = document.getElementById("counter");
 const hudProgress = document.getElementById("hudProgress");
 const notesPanel = document.getElementById("notesPanel");
 const notesBtn = document.getElementById("notesBtn");
+const clothesline = document.getElementById("clothesline");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let current = 0;
 
 slides.forEach((slide) => {
@@ -21,6 +23,10 @@ const renderNotes = () => {
   notesPanel.append(note);
 };
 
+const clearPegFocus = () => {
+  clothesline?.querySelectorAll(".peg").forEach((peg) => peg.setAttribute("aria-pressed", "false"));
+};
+
 const go = (index) => {
   current = Math.max(0, Math.min(slides.length - 1, index));
   slides.forEach((slide, i) => {
@@ -30,6 +36,7 @@ const go = (index) => {
   counter.textContent = `${current + 1} / ${slides.length}`;
   hudProgress.style.width = `${((current + 1) / slides.length) * 100}%`;
   history.replaceState(null, "", `#${current + 1}`);
+  clearPegFocus();
   if (!notesPanel.hidden) renderNotes();
 };
 
@@ -85,14 +92,51 @@ document.addEventListener("mousemove", () => {
   hudTimer = setTimeout(() => document.body.classList.remove("show-hud"), 1800);
 });
 
-const sketchImg = document.getElementById("sketchImg");
-const showSketch = () => {
-  sketchImg.hidden = false;
-  document.getElementById("sketchEmpty").hidden = true;
-  document.getElementById("sketchFrame").classList.add("has-sketch");
+/* Clothesline: click to lift a hanging piece */
+clothesline?.addEventListener("click", (event) => {
+  const peg = event.target.closest(".peg");
+  if (!peg) return;
+  event.stopPropagation();
+  const wasOn = peg.getAttribute("aria-pressed") === "true";
+  clearPegFocus();
+  peg.setAttribute("aria-pressed", String(!wasOn));
+});
+
+/* Clothesline + 3D tilt follow the pointer on the active slide */
+const onPointerMove = (event) => {
+  if (reduceMotion) return;
+  const slide = slides[current];
+  if (!slide) return;
+
+  const rect = slide.getBoundingClientRect();
+  const nx = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  const ny = ((event.clientY - rect.top) / rect.height) * 2 - 1;
+
+  if (slide.contains(clothesline)) {
+    clothesline.style.setProperty("--sway-x", `${nx * 4}deg`);
+    clothesline.style.setProperty("--sway-y", `${ny * -3}deg`);
+  }
+
+  slide.querySelectorAll(".tilt-card").forEach((card) => {
+    const c = card.getBoundingClientRect();
+    const cx = ((event.clientX - c.left) / c.width) * 2 - 1;
+    const cy = ((event.clientY - c.top) / c.height) * 2 - 1;
+    const rx = Math.max(-1, Math.min(1, cy)) * -8;
+    const ry = Math.max(-1, Math.min(1, cx)) * 10;
+    card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(8px)`;
+  });
 };
-if (sketchImg.complete && sketchImg.naturalWidth) showSketch();
-else sketchImg.addEventListener("load", showSketch);
+
+const resetTilts = () => {
+  clothesline?.style.setProperty("--sway-x", "0deg");
+  clothesline?.style.setProperty("--sway-y", "0deg");
+  document.querySelectorAll(".tilt-card").forEach((card) => {
+    card.style.transform = "";
+  });
+};
+
+deck.addEventListener("pointermove", onPointerMove);
+deck.addEventListener("pointerleave", resetTilts);
 
 window.addEventListener("resize", fit);
 window.addEventListener("hashchange", () => go(Number(location.hash.slice(1)) - 1 || 0));
