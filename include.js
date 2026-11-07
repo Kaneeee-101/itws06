@@ -4,9 +4,10 @@
   const slots = [...document.querySelectorAll("[data-include]")];
   let failed = false;
 
+  const bust = "v=9";
   const html = await Promise.all(
     slots.map((slot) =>
-      fetch(slot.dataset.include)
+      fetch(`${slot.dataset.include}?${bust}`)
         .then((res) => (res.ok ? res.text() : Promise.reject(res.status)))
         .catch(() => {
           failed = true;
@@ -27,7 +28,7 @@
   }
 
   const script = document.createElement("script");
-  script.src = "script.js?v=3";
+  script.src = "script.js?v=6";
   script.onload = () => {
     const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
     target?.scrollIntoView({ behavior: "instant" });

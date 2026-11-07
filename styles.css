@@ -1337,7 +1337,9 @@ section { padding: 120px 0; scroll-margin-top: 88px; }
 .form [aria-invalid="true"] { border-bottom-color: var(--rust); }
 
 /* Feedback */
-#feedback { background: var(--paper); }
+#engagement { background: var(--paper); }
+
+#feedback { background: var(--cream); }
 
 .feedback-grid {
   display: grid;
@@ -1715,6 +1717,12 @@ a.btn:focus-visible::after {
 .poster-grid { grid-template-columns: 0.95fr 1.05fr; align-items: center; }
 .poster-main img { mix-blend-mode: multiply; }
 .poster-grid .post-visual { order: 2; }
+.poster-photo {
+  width: 100%;
+  border-radius: 18px;
+  box-shadow: 0 30px 60px -30px rgba(43, 26, 20, 0.35);
+  cursor: zoom-in;
+}
 
 .poster {
   box-shadow: 0 30px 60px -30px rgba(43, 26, 20, 0.35);
