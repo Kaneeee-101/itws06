@@ -128,8 +128,8 @@ if (!reduceMotion) {
 const paintScroll = () => {
   const y = window.scrollY;
   const max = document.documentElement.scrollHeight - window.innerHeight;
-  const ratio = max > 0 ? y / max : 0;
-  if (progress) progress.style.width = `${ratio * 100}%`;
+  const ratio = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+  if (progress) progress.style.setProperty("--scroll", ratio.toFixed(4));
   nav?.classList.toggle("scrolled", y > 12);
   toTop?.classList.toggle("show", y > 480);
 
@@ -205,6 +205,7 @@ let galleryIndex = -1;
 
 const openLightbox = (img) => {
   if (!lightbox || !lightboxImg) return;
+  const scrollY = window.scrollY;
   galleryIndex = galleryImages.indexOf(img);
   lightboxImg.src = img.currentSrc || img.src;
   lightboxImg.alt = img.alt || "";
@@ -215,6 +216,7 @@ const openLightbox = (img) => {
   lightboxPrev?.toggleAttribute("hidden", !inGallery);
   lightboxNext?.toggleAttribute("hidden", !inGallery);
   if (!lightbox.open) lightbox.showModal();
+  window.scrollTo(0, scrollY);
 };
 
 const stepGallery = (direction) => {
@@ -224,7 +226,11 @@ const stepGallery = (direction) => {
 };
 
 document.querySelectorAll("[data-zoom]").forEach((img) => {
-  img.addEventListener("click", () => openLightbox(img));
+  img.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    openLightbox(img);
+  });
 });
 
 lightboxPrev?.addEventListener("click", () => stepGallery(-1));

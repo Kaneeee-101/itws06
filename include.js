@@ -4,7 +4,7 @@
   const slots = [...document.querySelectorAll("[data-include]")];
   let failed = false;
 
-  const bust = "v=15";
+  const bust = "v=26";
   const html = await Promise.all(
     slots.map((slot) =>
       fetch(`${slot.dataset.include}?${bust}`)
@@ -28,7 +28,7 @@
   }
 
   const script = document.createElement("script");
-  script.src = "script.js?v=6";
+  script.src = "script.js?v=12";
   script.onload = () => {
     const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
     target?.scrollIntoView({ behavior: "instant" });
