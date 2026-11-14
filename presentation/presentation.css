@@ -265,7 +265,7 @@ em { font-style: italic; color: var(--rust); }
 .bk.r { right: 0; transform-origin: 100% 50%; }
 .bk.cover { background: linear-gradient(90deg, #7a4533 0%, var(--coffee) 55%, #4a261d 100%); box-shadow: inset 0 0 0 14px rgba(216, 191, 165, 0.12), inset 0 0 0 16px rgba(216, 191, 165, 0.35); }
 .bk.cover.r { background: linear-gradient(270deg, #7a4533 0%, var(--coffee) 55%, #4a261d 100%); }
-.bk.cover::before { content: ""; position: absolute; inset: 0; background: url("../assets/logo-mark-clear.png") no-repeat; background-size: 380px; filter: brightness(0) invert(0.92) sepia(0.3); opacity: 0.9; }
+.bk.cover::before { content: ""; position: absolute; inset: 0; background: url("../assets/logos/mark-clear.png") no-repeat; background-size: 380px; filter: brightness(0) invert(0.92) sepia(0.3); opacity: 0.9; }
 .bk.cover.l::before { background-position: calc(100% + 190px) center; }
 .bk.cover.r::before { background-position: calc(0% - 190px) center; }
 .bk.cover::after { content: ""; position: absolute; top: 0; bottom: 0; width: 22px; background: linear-gradient(90deg, rgba(0, 0, 0, 0.35), transparent); }

@@ -4,7 +4,7 @@
   const slots = [...document.querySelectorAll("[data-include]")];
   let failed = false;
 
-  const bust = "v=26";
+  const bust = "v=33";
   const html = await Promise.all(
     slots.map((slot) =>
       fetch(`${slot.dataset.include}?${bust}`)

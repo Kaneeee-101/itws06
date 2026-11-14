@@ -1,3 +1,4 @@
 _extract/
 _logo_extract/
 .DS_Store
+.vercel

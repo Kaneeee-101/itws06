@@ -1,594 +1,845 @@
-const btn = document.getElementById("menuBtn");
-const links = document.getElementById("navLinks");
-const nav = document.querySelector(".nav");
-const progress = document.getElementById("progress");
-const toTop = document.getElementById("toTop");
-const toast = document.getElementById("toast");
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightboxImg");
-
-const setMenu = (open) => {
-  links?.classList.toggle("open", open);
-  nav?.classList.toggle("menu-open", open);
-  document.body.classList.toggle("menu-open", open);
-  btn?.setAttribute("aria-expanded", String(open));
-  btn?.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-};
-
-btn?.addEventListener("click", () => {
-  setMenu(!links?.classList.contains("open"));
-});
-
-links?.querySelectorAll("a").forEach((a) => {
-  a.addEventListener("click", () => setMenu(false));
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    setMenu(false);
-    lightbox?.close();
-  }
-});
-
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const parallaxNodes = [...document.querySelectorAll("[data-parallax]")];
-const sections = [...document.querySelectorAll("main section[id], #top")];
-const navAnchors = [...document.querySelectorAll(".nav-links a[href^='#']")];
-const SCENE_SELECTOR = ".hero, .watermark, .media-reveal, .post-visual, .image-band, .market, .value";
-const visibleScenes = new Set();
-let ticking = false;
-
-const SCROLL_TILT = 8;
-const POINTER_TILT = 7;
-const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-const paintTilt = (el) => {
-  const scrollTilt = el.classList.contains("card") ? -(el.sp || 0) * SCROLL_TILT : 0;
-  el.style.setProperty("--tilt-x", `${(scrollTilt + (el.tiltX || 0)).toFixed(2)}deg`);
-  el.style.setProperty("--tilt-y", `${(el.tiltY || 0).toFixed(2)}deg`);
-};
-
-const paintScenes = () => {
-  const vh = window.innerHeight;
-  visibleScenes.forEach((el) => {
-    const rect = el.getBoundingClientRect();
-    const travel = (vh + rect.height) / 2;
-    const progress = Math.max(-1, Math.min(1, (vh / 2 - (rect.top + rect.height / 2)) / travel));
-    el.style.setProperty("--sp", progress.toFixed(3));
-    if (el.classList.contains("card")) {
-      el.sp = progress;
-      paintTilt(el);
-    }
-  });
-};
-
-const tilting = new Set();
-let tiltFrame = 0;
-
-const stepTilt = () => {
-  tiltFrame = 0;
-  tilting.forEach((el) => {
-    el.tiltX = (el.tiltX || 0) + ((el.targetX || 0) - (el.tiltX || 0)) * 0.16;
-    el.tiltY = (el.tiltY || 0) + ((el.targetY || 0) - (el.tiltY || 0)) * 0.16;
-    const settled = Math.abs(el.targetX - el.tiltX) < 0.02 && Math.abs(el.targetY - el.tiltY) < 0.02;
-    if (settled) {
-      el.tiltX = el.targetX;
-      el.tiltY = el.targetY;
-      if (!el.targetX && !el.targetY) tilting.delete(el);
-    }
-    paintTilt(el);
-  });
-  if ([...tilting].some((el) => el.tiltX !== el.targetX || el.tiltY !== el.targetY)) {
-    tiltFrame = requestAnimationFrame(stepTilt);
-  }
-};
-
-const aimTilt = (el, x, y) => {
-  el.targetX = x;
-  el.targetY = y;
-  tilting.add(el);
-  if (!tiltFrame) tiltFrame = requestAnimationFrame(stepTilt);
-};
-
-let tiltTarget = null;
-const releaseTilt = () => {
-  if (tiltTarget) aimTilt(tiltTarget, 0, 0);
-  tiltTarget = null;
-};
-
-if (!reduceMotion) {
-  const seal = document.querySelector(".seal-wrap");
-  const hero = document.querySelector(".hero");
-
-  document.addEventListener("pointermove", (event) => {
-    if (event.pointerType !== "mouse" || !finePointer.matches) return;
-    const card = event.target.closest(".card.in-view");
-    const target = card || (hero?.contains(event.target) ? seal : null);
-    if (target !== tiltTarget) releaseTilt();
-    if (!target) return;
-    tiltTarget = target;
-    if (card) {
-      const rect = card.getBoundingClientRect();
-      const nx = (event.clientX - rect.left) / rect.width - 0.5;
-      const ny = (event.clientY - rect.top) / rect.height - 0.5;
-      card.style.setProperty("--gx", `${((nx + 0.5) * 100).toFixed(1)}%`);
-      card.style.setProperty("--gy", `${((ny + 0.5) * 100).toFixed(1)}%`);
-      aimTilt(card, -ny * 2 * POINTER_TILT, nx * 2 * POINTER_TILT);
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const loader = document.getElementById("loader");
+  const loaderStatus = document.getElementById("loaderStatus");
+  let pageReady = document.readyState === "complete";
+  if (!pageReady) window.addEventListener("load", () => { pageReady = true; }, { once: true });
+  const closeLoader = () => {
+    document.getElementById("hero")?.classList.add("play");
+    if (!loader || loader.classList.contains("done")) return;
+    loader.style.setProperty("--pour", "100");
+    loader.setAttribute("aria-valuenow", "100");
+    if (loaderStatus) loaderStatus.textContent = "Ready";
+    loader.classList.add("done");
+    document.body.classList.remove("loading");
+  };
+  const pourStarted = performance.now();
+  const pourDuration = reduce ? 280 : 2800;
+  let shown = 8;
+  let last = pourStarted;
+  let stage = "";
+  let posted = -1;
+  let fullAt = 0;
+  let held = false;
+  let blendFrom = 8;
+  let blendStart = 0;
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - ((-2 * t + 2) ** 3) / 2);
+  const pourTick = (now) => {
+    if (!loader || loader.classList.contains("done")) return;
+    const dt = Math.min(34, now - last);
+    last = now;
+    const elapsed = now - pourStarted;
+    const images = document.images;
+    let complete = 0;
+    for (let i = 0; i < images.length; i += 1) if (images[i].complete) complete += 1;
+    const resource = images.length ? complete / images.length : 1;
+    const curve = 8 + ease(Math.min(1, elapsed / pourDuration)) * 92;
+    const cap = 82 + resource * 10;
+    if (!pageReady && curve > cap) {
+      held = true;
+      blendStart = 0;
+      shown += (cap - shown) * (1 - Math.exp(-dt / 240));
+    } else if (held) {
+      if (!blendStart) {
+        blendStart = now;
+        blendFrom = shown;
+      }
+      const blend = Math.min(1, (now - blendStart) / 560);
+      shown = blendFrom + (curve - blendFrom) * ease(blend);
+      if (blend >= 1) held = false;
     } else {
-      const rect = hero.getBoundingClientRect();
-      const nx = (event.clientX - rect.left) / rect.width - 0.5;
-      const ny = (event.clientY - rect.top) / rect.height - 0.5;
-      aimTilt(seal, -ny * 22, nx * 22);
+      shown = curve;
     }
-  }, { passive: true });
-
-  document.documentElement.addEventListener("pointerleave", releaseTilt);
-}
-
-const paintScroll = () => {
-  const y = window.scrollY;
-  const max = document.documentElement.scrollHeight - window.innerHeight;
-  const ratio = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
-  if (progress) progress.style.setProperty("--scroll", ratio.toFixed(4));
-  nav?.classList.toggle("scrolled", y > 12);
-  toTop?.classList.toggle("show", y > 480);
-
-  if (!reduceMotion) {
-    parallaxNodes.forEach((el) => {
-      const speed = Number(el.dataset.parallax) || 0.1;
-      const rect = el.getBoundingClientRect();
-      const top = rect.top - (el.parallaxOffset || 0);
-      const offset = (top + rect.height / 2 - window.innerHeight / 2) * speed;
-      el.parallaxOffset = offset;
-      el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
-    });
-    paintScenes();
-  }
-
-  let current = "top";
-  sections.forEach((section) => {
-    if (section.getBoundingClientRect().top <= 120) current = section.id || "top";
-  });
-  navAnchors.forEach((a) => {
-    const id = a.getAttribute("href")?.slice(1);
-    if (id === current) a.setAttribute("aria-current", "true");
-    else a.removeAttribute("aria-current");
-  });
-
-  ticking = false;
-};
-
-window.addEventListener("scroll", () => {
-  if (!ticking) {
-    requestAnimationFrame(paintScroll);
-    ticking = true;
-  }
-}, { passive: true });
-
-toTop?.addEventListener("click", () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-const showToast = (message) => {
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(showToast.timer);
-  showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
-};
-
-const copyText = async (value, message) => {
-  try {
-    await navigator.clipboard.writeText(value);
-    showToast(message);
-  } catch {
-    showToast("Copy is not available in this browser.");
-  }
-};
-
-document.querySelectorAll("[data-copy]").forEach((el) => {
-  el.addEventListener("click", () => {
-    copyText(el.dataset.copy, `Copied ${el.dataset.copy}`);
-  });
-});
-
-document.getElementById("copyCaption")?.addEventListener("click", () => {
-  const text = document.getElementById("captionText")?.textContent?.trim() || "";
-  copyText(text, "Caption copied");
-});
-
-const lightboxCaption = document.getElementById("lightboxCaption");
-const lightboxPrev = document.getElementById("lightboxPrev");
-const lightboxNext = document.getElementById("lightboxNext");
-const galleryImages = [...document.querySelectorAll("[data-gallery]")];
-let galleryIndex = -1;
-
-const openLightbox = (img) => {
-  if (!lightbox || !lightboxImg) return;
-  const scrollY = window.scrollY;
-  galleryIndex = galleryImages.indexOf(img);
-  lightboxImg.src = img.currentSrc || img.src;
-  lightboxImg.alt = img.alt || "";
-  if (lightboxCaption) {
-    lightboxCaption.textContent = img.closest("figure")?.querySelector("figcaption")?.textContent || "";
-  }
-  const inGallery = galleryIndex > -1;
-  lightboxPrev?.toggleAttribute("hidden", !inGallery);
-  lightboxNext?.toggleAttribute("hidden", !inGallery);
-  if (!lightbox.open) lightbox.showModal();
-  window.scrollTo(0, scrollY);
-};
-
-const stepGallery = (direction) => {
-  if (galleryIndex < 0 || !galleryImages.length) return;
-  const next = (galleryIndex + direction + galleryImages.length) % galleryImages.length;
-  openLightbox(galleryImages[next]);
-};
-
-document.querySelectorAll("[data-zoom]").forEach((img) => {
-  img.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    openLightbox(img);
-  });
-});
-
-lightboxPrev?.addEventListener("click", () => stepGallery(-1));
-lightboxNext?.addEventListener("click", () => stepGallery(1));
-lightbox?.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowLeft") stepGallery(-1);
-  if (event.key === "ArrowRight") stepGallery(1);
-});
-
-document.getElementById("lightboxClose")?.addEventListener("click", () => lightbox?.close());
-lightbox?.addEventListener("click", (event) => {
-  if (event.target === lightbox) lightbox.close();
-});
-
-const steps = document.querySelectorAll(".step[data-logo]");
-const logoCards = document.querySelectorAll(".logo-card[data-logo]");
-
-const setLogoStep = (id) => {
-  steps.forEach((step) => step.classList.toggle("active", step.dataset.logo === id));
-  logoCards.forEach((card) => card.classList.toggle("active", card.dataset.logo === id));
-};
-
-steps.forEach((step) => {
-  step.addEventListener("click", () => setLogoStep(step.dataset.logo));
-});
-setLogoStep("seal");
-
-const sceneObserver =
-  !reduceMotion && "IntersectionObserver" in window
-    ? new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) visibleScenes.add(entry.target);
-          else visibleScenes.delete(entry.target);
-        });
-        paintScenes();
-      })
-    : null;
-document.querySelectorAll(SCENE_SELECTOR).forEach((el) => sceneObserver?.observe(el));
-
-const REVEAL_ENTER_RATIO = 0.14;
-const revealItems = document.querySelectorAll(".reveal, .stagger");
-if (reduceMotion) {
-  revealItems.forEach((el) => el.classList.add("in"));
-} else if ("IntersectionObserver" in window) {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= REVEAL_ENTER_RATIO) entry.target.classList.add("in");
-        else if (!entry.isIntersecting) entry.target.classList.remove("in");
-      });
-    },
-    { threshold: [0, REVEAL_ENTER_RATIO] }
-  );
-  revealItems.forEach((el) => observer.observe(el));
-} else {
-  revealItems.forEach((el) => el.classList.add("in"));
-}
-
-paintScroll();
-
-const CARD_SELECTOR =
-  ".owner, .zone-list li, .services-grid article, .menu-row, .g-item, .market article, .step, .logo-card, .swatch, .feedback-list li";
-const CARD_ENTER_RATIO = 0.12;
-const CARD_DRIFT = [-18, -34, -10, -26];
-
-const cardObserver =
-  !reduceMotion && "IntersectionObserver" in window
-    ? new IntersectionObserver(
-        (entries) => {
-          entries
-            .filter((e) => e.isIntersecting && e.intersectionRatio >= CARD_ENTER_RATIO && !e.target.classList.contains("in-view"))
-            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left)
-            .forEach((entry, i) => {
-              const card = entry.target;
-              const delay = Math.min(i, 6) * 90;
-              card.style.setProperty("--card-delay", `${delay}ms`);
-              card.classList.add("in-view");
-              clearTimeout(card.cardTimer);
-              card.cardTimer = setTimeout(() => card.style.removeProperty("--card-delay"), delay + 1200);
-            });
-          entries.forEach((e) => {
-            if (!e.isIntersecting) e.target.classList.remove("in-view");
-          });
-        },
-        { threshold: [0, CARD_ENTER_RATIO] }
-      )
-    : null;
-
-const watchCards = (root = document) => {
-  if (!cardObserver) return;
-  root.querySelectorAll(CARD_SELECTOR).forEach((card) => {
-    if (card.classList.contains("card")) return;
-    card.classList.add("card");
-    if (card.querySelector("img")) card.classList.add("card-zoom");
-    const index = [...card.parentElement.children].indexOf(card);
-    card.style.setProperty("--drift", `${CARD_DRIFT[index % CARD_DRIFT.length]}px`);
-    cardObserver.observe(card);
-    sceneObserver?.observe(card);
-  });
-};
-
-const releaseCards = (root) => {
-  root?.querySelectorAll(".card").forEach((card) => {
-    cardObserver?.unobserve(card);
-    sceneObserver?.unobserve(card);
-    visibleScenes.delete(card);
-  });
-};
-
-watchCards();
-
-const data = window.SITE_DATA || {};
-const contact = data.contact || {};
-
-const escapeHtml = (value) =>
-  String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
-
-const formatPrice = (price) =>
-  typeof price === "number" ? `₱${price.toLocaleString("en-PH", { minimumFractionDigits: 0 })}` : "Price soon";
-
-const menuFilters = document.getElementById("menuFilters");
-const menuList = document.getElementById("menuList");
-const categories = data.menuCategories || [];
-const menuItems = data.menu || [];
-
-const renderMenu = (filter) => {
-  if (!menuList) return;
-  const shown = categories.filter((cat) => filter === "all" || cat.id === filter);
-  releaseCards(menuList);
-  menuList.innerHTML = shown
-    .map((cat) => {
-      const items = menuItems.filter((item) => item.category === cat.id);
-      if (!items.length) return "";
-      return `
-        <div class="menu-group">
-          <h3>${escapeHtml(cat.label)}</h3>
-          <ul>
-            ${items
-              .map(
-                (item) => `
-              <li class="menu-row${item.image ? " has-img" : ""}">
-                ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" />` : ""}
-                <div class="menu-row-copy">
-                  <div class="menu-row-line">
-                    <span class="menu-name">${escapeHtml(item.name)}</span>
-                    <span class="menu-dots" aria-hidden="true"></span>
-                    <span class="menu-price${typeof item.price === "number" ? "" : " pending"}">${formatPrice(item.price)}</span>
-                  </div>
-                  ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
-                </div>
-              </li>`
-              )
-              .join("")}
-          </ul>
-        </div>`;
-    })
-    .join("");
-  watchCards(menuList);
-};
-
-if (menuFilters && categories.length) {
-  const used = categories.filter((cat) => menuItems.some((item) => item.category === cat.id));
-  menuFilters.innerHTML = [{ id: "all", label: "All" }, ...used]
-    .map(
-      (cat, i) =>
-        `<button class="filter" type="button" data-filter="${cat.id}" aria-pressed="${i === 0}">${escapeHtml(cat.label)}</button>`
-    )
-    .join("");
-  menuFilters.addEventListener("click", (event) => {
-    const button = event.target.closest(".filter");
-    if (!button) return;
-    menuFilters.querySelectorAll(".filter").forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
-    renderMenu(button.dataset.filter);
-  });
-}
-renderMenu("all");
-
-const addressEl = document.getElementById("contactAddress");
-if (addressEl && contact.address) addressEl.textContent = contact.address;
-
-const contactList = document.getElementById("contactList");
-if (contactList) {
-  const rows = [];
-  if (contact.hours?.length) {
-    rows.push(["Opening hours", contact.hours.map((h) => `${escapeHtml(h.days)}: ${escapeHtml(h.time)}`).join("<br />")]);
-  }
-  if (contact.phone) {
-    rows.push(["Phone", `<a href="tel:${escapeHtml(contact.phone.replace(/[^\d+]/g, ""))}">${escapeHtml(contact.phone)}</a>`]);
-  }
-  if (contact.email) {
-    rows.push(["Email", `<a href="mailto:${escapeHtml(contact.email)}">${escapeHtml(contact.email)}</a>`]);
-  }
-  if (contact.socials?.length) {
-    rows.push([
-      "Social",
-      contact.socials
-        .map((s) => `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.label)}</a>`)
-        .join(" · "),
-    ]);
-  }
-  contactList.innerHTML = rows.map(([term, value]) => `<div><dt>${term}</dt><dd>${value}</dd></div>`).join("");
-}
-
-const footerSocial = document.getElementById("footerSocial");
-if (footerSocial && contact.socials?.length) {
-  footerSocial.innerHTML = contact.socials
-    .map((s) => `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.label)}</a>`)
-    .join("");
-}
-
-const mapsUrl = contact.mapQuery
-  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.mapQuery)}`
-  : "";
-
-const mapFrame = document.getElementById("mapFrame");
-if (mapFrame && contact.mapQuery) {
-  mapFrame.innerHTML = `<iframe title="Pages & Pour location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-    src="https://www.google.com/maps?q=${encodeURIComponent(contact.mapQuery)}&output=embed"></iframe>`;
-  mapFrame.classList.add("has-map");
-}
-
-const contactForm = document.getElementById("contactForm");
-
-document.querySelectorAll("[data-action]").forEach((el) => {
-  el.addEventListener("click", (event) => {
-    const action = el.dataset.action;
-    if (action === "directions" && mapsUrl) {
-      event.preventDefault();
-      window.open(mapsUrl, "_blank", "noopener");
+    if (pageReady && elapsed >= pourDuration && shown > 99.6) shown = 100;
+    const pct = Math.round(shown);
+    const next = pct < 34 ? "Opening the page" : pct < 68 ? "Pouring" : pct < 100 ? "Almost ready" : "Ready";
+    loader.style.setProperty("--pour", shown.toFixed(2));
+    if (pct !== posted) {
+      posted = pct;
+      loader.setAttribute("aria-valuenow", String(pct));
+    }
+    if (loaderStatus && next !== stage) {
+      stage = next;
+      loaderStatus.textContent = next;
+      loaderStatus.classList.remove("tick");
+      void loaderStatus.offsetWidth;
+      loaderStatus.classList.add("tick");
+    }
+    if (shown >= 100 && pageReady) {
+      if (!fullAt) fullAt = now;
+      if (now - fullAt > (reduce ? 80 : 420)) {
+        closeLoader();
+        return;
+      }
+    }
+    if (elapsed > (reduce ? 700 : 5600)) {
+      closeLoader();
       return;
     }
-    if (action === "contact" && contactForm) {
+    requestAnimationFrame(pourTick);
+  };
+  requestAnimationFrame(pourTick);
+  setTimeout(closeLoader, reduce ? 700 : 6200);
+  const dial = document.querySelector(".dial");
+  const navLinks = document.getElementById("navLinks");
+  const menuBtn = document.getElementById("menuBtn");
+  const toast = document.getElementById("toast");
+  const toTop = document.getElementById("toTop");
+
+  const showToast = (message) => {
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove("show"), 1800);
+  };
+
+  const setScroll = (y) => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+    dial?.style.setProperty("--scroll", String(ratio));
+    toTop?.classList.toggle("show", y > 500);
+  };
+
+  let riseObserver = null;
+  const armRise = (el, kind, delay) => {
+    el.classList.remove("rise", "rise-left", "rise-right", "pop-left", "pop-right", "in");
+    el.classList.add(kind);
+    el.style.animationDelay = delay || "0s";
+    if (reduce) {
+      el.classList.add("in");
+      return;
+    }
+    if (!riseObserver) {
+      riseObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("in");
+          riseObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.16, rootMargin: "0px 0px -32px 0px" });
+    }
+    riseObserver.observe(el);
+  };
+
+  const stampGroup = (selector, kind) => {
+    const fresh = [...document.querySelectorAll(selector)].filter((el) => !el.dataset.rise);
+    const groups = new Map();
+    fresh.forEach((el) => {
+      const list = groups.get(el.parentElement) || [];
+      list.push(el);
+      groups.set(el.parentElement, list);
+    });
+    groups.forEach((list) => {
+      list.forEach((el, index) => {
+        el.dataset.rise = kind;
+        armRise(el, kind, `${Math.min(index, 5) * 0.1}s`);
+      });
+    });
+  };
+
+  const initRises = () => {
+    [
+      ["#storyPhoto", "rise-left"],
+      ["#concept .split > div > *", "rise"],
+      [".section-head > *", "rise"],
+      [".space-grid figure", "rise"],
+      [".zones li", "rise"],
+      [".offer-row article", "rise"],
+      ["#menu .card", "rise"],
+      [".owner", "rise"],
+      ["#logoSteps .step", "rise"],
+      ["#postPair .artwork", "rise-left"],
+      ["#postPair .specs > *", "rise"],
+      [".engagement-shot", "rise"],
+      [".cards figure", "rise"],
+      ["#posterPair .specs > *", "rise"],
+      ["#posterPair .artwork", "rise-right"],
+      [".visit-grid > *", "rise"],
+      [".form > *", "rise"],
+    ].forEach(([selector, kind]) => stampGroup(selector, kind));
+  };
+
+  let scrollQueued = false;
+  window.addEventListener("scroll", () => {
+    if (scrollQueued) return;
+    scrollQueued = true;
+    requestAnimationFrame(() => {
+      scrollQueued = false;
+      setScroll(window.scrollY);
+    });
+  }, { passive: true });
+
+  const sectionLinks = [...document.querySelectorAll('nav[aria-label="Page"] a')];
+  const watched = sectionLinks.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+  if (watched.length && "IntersectionObserver" in window) {
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const id = "#" + entry.target.id;
+        sectionLinks.forEach((link) => link.classList.toggle("here", link.getAttribute("href") === id));
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    watched.forEach((section) => spy.observe(section));
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const id = link.getAttribute("href");
+      if (!id || id === "#") return;
+      const target = document.querySelector(id);
+      if (!target) return;
       event.preventDefault();
-      contactForm.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
-      setTimeout(() => contactForm.querySelector("input")?.focus({ preventScroll: true }), reduceMotion ? 0 : 600);
-    }
+      navLinks?.classList.remove("open");
+      menuBtn?.setAttribute("aria-expanded", "false");
+      const top = target.getBoundingClientRect().top + window.scrollY - 72;
+      window.scrollTo({ top, behavior: "auto" });
+    });
   });
-});
 
-const fieldMessage = (el) => {
-  const state = el.validity;
-  if (state.valueMissing) return el.tagName === "SELECT" ? "Please choose an option." : "This field is required.";
-  if (state.typeMismatch) return "Please enter a valid email address.";
-  if (state.tooShort) return `Please enter at least ${el.minLength} characters.`;
-  return "";
-};
-
-const validateForm = (form) => {
-  let firstInvalid = null;
-  form.querySelectorAll(".field-error").forEach((slot) => {
-    const field = form.elements[slot.dataset.for];
-    if (!field) return;
-    const isRadio = field instanceof RadioNodeList;
-    const el = isRadio ? field[0] : field;
-    const valid = isRadio ? Boolean(field.value) : el.checkValidity();
-    slot.textContent = valid ? "" : isRadio ? "Please choose a rating." : fieldMessage(el);
-    if (!isRadio) el.setAttribute("aria-invalid", String(!valid));
-    if (!valid) firstInvalid ||= el;
+  menuBtn?.addEventListener("click", () => {
+    const open = navLinks.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
   });
-  firstInvalid?.focus();
-  return !firstInvalid;
-};
 
-document.querySelectorAll("#contactForm, #feedbackForm").forEach((form) => {
-  form.addEventListener("input", (event) => {
-    const slot = form.querySelector(`.field-error[data-for="${event.target.name}"]`);
-    if (!slot?.textContent) return;
-    const field = form.elements[event.target.name];
-    const valid = field instanceof RadioNodeList ? Boolean(field.value) : field.checkValidity();
-    if (valid) {
-      slot.textContent = "";
-      event.target.removeAttribute("aria-invalid");
-    }
+  toTop?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "auto" });
   });
-});
 
-const setNote = (form, message) => {
-  const note = form.querySelector(".form-note");
-  if (note) {
-    note.textContent = message;
-    note.classList.add("ok");
-  }
-};
+  const data = window.SITE_DATA;
+  const filters = document.getElementById("filters");
+  const menu = document.getElementById("menu");
+  let active = "books";
 
-contactForm?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!validateForm(contactForm)) return;
-  const values = Object.fromEntries(new FormData(contactForm));
-  if (contact.email) {
-    const body = `${values.message}\n\n— ${values.name} (${values.email})`;
-    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(values.subject)}&body=${encodeURIComponent(body)}`;
-    setNote(contactForm, "Opening your email app to send the message…");
-  } else {
-    setNote(contactForm, `Thanks, ${values.name}! Online messaging isn’t connected yet — please visit us at the shop.`);
-  }
-  contactForm.reset();
-});
-
-const feedbackForm = document.getElementById("feedbackForm");
-const feedbackList = document.getElementById("feedbackList");
-const feedbackSummary = document.getElementById("feedbackSummary");
-const FEEDBACK_KEY = "pages-pour-feedback";
-
-const loadFeedback = () => {
-  try {
-    return JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || [];
-  } catch {
-    return [];
-  }
-};
-
-const renderFeedback = () => {
-  const entries = loadFeedback();
-  if (feedbackSummary) {
-    if (entries.length) {
-      const avg = entries.reduce((sum, e) => sum + e.rating, 0) / entries.length;
-      feedbackSummary.innerHTML = `<p class="feedback-avg">${avg.toFixed(1)}<span>/ 5</span></p><p>${entries.length} review${entries.length > 1 ? "s" : ""} on this device</p>`;
-    } else {
-      feedbackSummary.innerHTML = `<p class="feedback-empty">No feedback yet. Be the first to share your visit.</p>`;
-    }
-  }
-  if (feedbackList) {
-    releaseCards(feedbackList);
-    feedbackList.innerHTML = entries
-      .slice()
-      .reverse()
-      .map(
-        (e) => `<li>
-          <div class="feedback-meta"><strong>${escapeHtml(e.name)}</strong><span class="feedback-stars" aria-label="${e.rating} out of 5 stars">${"★".repeat(e.rating)}${"☆".repeat(5 - e.rating)}</span></div>
-          <p>${escapeHtml(e.comment)}</p>
-          <time datetime="${e.date}">${new Date(e.date).toLocaleDateString("en-PH", { year: "numeric", month: "short", day: "numeric" })}</time>
-        </li>`
-      )
+  const renderMenu = () => {
+    if (!data || !menu) return;
+    menu.innerHTML = data.menu
+      .filter((item) => item.category === active)
+      .map((item) => {
+        const desc = item.description ? `<p>${item.description}</p>` : "";
+        const img = item.image
+          ? `<img src="${item.image}" alt="${item.name}" data-zoom />`
+          : "";
+        return `<article class="card">${img}<h3>${item.name}</h3>${desc}<p class="price">₱${item.price}</p></article>`;
+      })
       .join("");
-    watchCards(feedbackList);
-  }
-};
+    stampGroup("#menu .card", "rise");
+  };
 
-feedbackForm?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!validateForm(feedbackForm)) return;
-  const values = Object.fromEntries(new FormData(feedbackForm));
-  const entries = loadFeedback();
-  entries.push({
-    name: values.name.trim(),
-    rating: Number(values.rating),
-    comment: values.comment.trim(),
-    date: new Date().toISOString(),
+  if (data && filters) {
+    filters.innerHTML = data.menuCategories
+      .map((cat) => `<button type="button" role="tab" data-cat="${cat.id}" aria-selected="${cat.id === active}">${cat.label}</button>`)
+      .join("");
+    filters.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-cat]");
+      if (!button) return;
+      active = button.dataset.cat;
+      filters.querySelectorAll("[data-cat]").forEach((el) => {
+        el.setAttribute("aria-selected", String(el === button));
+      });
+      renderMenu();
+    });
+    renderMenu();
+  }
+
+  const cube = document.getElementById("logoCube");
+  let cubeTurn = 0;
+  const cubeFace = () => ((cubeTurn % 4) + 4) % 4;
+  const fitCube = () => {
+    if (!cube) return;
+    cube.style.setProperty("--depth", String(cube.offsetWidth / 2));
+  };
+  fitCube();
+  window.addEventListener("resize", fitCube);
+  if (cube && window.ResizeObserver) new ResizeObserver(fitCube).observe(cube);
+
+  const parts = ["Sketch", "Badge", "Book", "Cup", "Steam", "Name", "Year", "Ring"];
+  const trackAt = (now) => parts.map((name, index) => [name, index < now ? "done" : index === now ? "now" : ""]);
+  const sketchSheets = {
+    mark: {
+      kicker: "Sketch 01",
+      title: "Mark sketch",
+      lede: "The pencil drawing of the whole idea, before any piece is drawn solid.",
+      src: "assets/logos/sketch-mark.png",
+      alt: "Sketch of the pictorial mark",
+      stage: "",
+      track: trackAt(0),
+      notes: [
+        ["Whole idea", "Cup, book, name, year, leaf, tagline, and the coffee ring are still one pencil drawing.", "mark", "all"],
+        ["Next", "The badge sketch letters the name on the mug. Later sheets read each part off these two drawings.", "mark", "icon"]
+      ]
+    },
+    badge: {
+      kicker: "Sketch 02",
+      title: "Badge sketch",
+      lede: "The name moves onto the mug so the icon can be read at a small size.",
+      src: "assets/logos/sketch-badge.png",
+      alt: "Sketch of the badge lockup",
+      stage: "",
+      track: trackAt(1),
+      notes: [
+        ["Name on the mug", "Pages & Pour is lettered on the cup.", "badge", "name"],
+        ["Book", "The mug sits on a closed book, the Pages half.", "badge", "book"],
+        ["Steam", "Steam rises from the cup, the Pour half.", "badge", "steam"],
+        ["Bookmark", "A bookmark ribbon comes out of the book.", "badge", "bookmark"]
+      ]
+    },
+    book: {
+      kicker: "Part 03",
+      title: "The book",
+      lede: "Pages, in pencil. The badge sketch draws the book large. The mark sketch draws the same book inside the ring.",
+      src: "assets/logos/sketch-badge.png",
+      alt: "Badge sketch",
+      stage: "pencil",
+      focus: "badge",
+      track: trackAt(2),
+      notes: [
+        ["Book", "In the badge sketch, the mug sits on a closed book. That book is the Pages half.", "badge", "book"],
+        ["Bookmark", "A ribbon comes out of the right side of the book.", "badge", "bookmark"],
+        ["Mark sketch", "The same book is drawn smaller, inside the coffee ring.", "mark", "icon"]
+      ]
+    },
+    pour: {
+      kicker: "Part 04",
+      title: "Cup and steam",
+      lede: "Pour, in pencil. The badge sketch sets the mug on the book, with the name on the cup and steam above it.",
+      src: "assets/logos/sketch-badge.png",
+      alt: "Badge sketch",
+      stage: "pencil",
+      focus: "badge",
+      track: parts.map((name, index) => [name, index < 3 ? "done" : index === 3 || index === 4 ? "now" : ""]),
+      notes: [
+        ["Cup", "The badge sketch draws the mug on the book. Pour is the cup.", "badge", "cup"],
+        ["Name on the mug", "Pages & Pour is lettered on the cup.", "badge", "name"],
+        ["Steam", "Three pencil lines rise off the cup.", "badge", "steam"],
+        ["Mark sketch", "The mark sketch repeats the cup, smaller, above the wordmark.", "mark", "icon"]
+      ]
+    },
+    name: {
+      kicker: "Part 05",
+      title: "Name and year",
+      lede: "Both sketches carry the name. The mark sketch sets the wordmark, EST. 2026, and the leaf. The badge sketch letters it on the mug.",
+      src: "assets/logos/sketch-mark.png",
+      alt: "Mark sketch",
+      stage: "pencil",
+      focus: "both",
+      track: parts.map((name, index) => [name, index < 5 ? "done" : index === 5 || index === 6 ? "now" : ""]),
+      notes: [
+        ["Wordmark", "On the mark sketch, Pages & Pour sits under the icon.", "mark", "word"],
+        ["Est. 2026", "The year is centered under the name.", "mark", "year"],
+        ["Leaf divider", "A small leafy branch sits beside the year.", "mark", "leaf"],
+        ["Badge sketch", "The same name is lettered on the mug.", "badge", "name"]
+      ]
+    },
+    ring: {
+      kicker: "Part 06",
+      title: "Coffee ring",
+      lede: "The ring is the pencil frame on the mark sketch. The badge sketch is the icon drawn inside it.",
+      src: "assets/logos/sketch-mark.png",
+      alt: "Mark sketch",
+      stage: "pencil",
+      focus: "mark",
+      track: trackAt(7),
+      notes: [
+        ["Coffee ring", "On the mark sketch, the open ring frames the drawing. It is the stain left on a page after a long sit.", "mark", "ring"],
+        ["Tagline", "One Place. Every Page. Every Pour. follows the top of the ring.", "mark", "tag"],
+        ["Badge sketch", "The badge sketch is the icon inside that ring: cup, book, steam, and bookmark.", "badge", "icon"]
+      ]
+    }
+  };
+  const sheetKicker = document.getElementById("sheetKicker");
+  const sheetTitle = document.getElementById("sheetTitle");
+  const sheetLede = document.getElementById("sheetLede");
+  const sheetImg = document.getElementById("sheetImg");
+  const sheetNotes = document.getElementById("sheetNotes");
+  const partTrack = document.getElementById("partTrack");
+  const spots = {
+    badge: {
+      steam: { x: 45, y: 29, z: 1.85, w: 46, h: 42 },
+      cup: { x: 46, y: 51, z: 1.8, w: 54, h: 46 },
+      name: { x: 46, y: 50, z: 2.15, w: 42, h: 30 },
+      book: { x: 46, y: 73, z: 1.8, w: 82, h: 26 },
+      bookmark: { x: 78, y: 76, z: 2.6, w: 20, h: 18 },
+      icon: { x: 48, y: 52, z: 1.45, w: 78, h: 64 }
+    },
+    mark: {
+      all: { x: 48, y: 50, z: 1.18, w: 82, h: 70, round: true },
+      icon: { x: 50, y: 38, z: 2.2, w: 34, h: 24 },
+      word: { x: 47, y: 51, z: 1.72, w: 76, h: 32 },
+      year: { x: 50, y: 67, z: 2.55, w: 38, h: 12 },
+      leaf: { x: 50, y: 75, z: 2.25, w: 46, h: 14 },
+      tag: { x: 58, y: 18, z: 2.05, w: 50, h: 16 },
+      ring: { x: 48, y: 50, z: 1.2, w: 80, h: 68, round: true }
+    }
+  };
+  const resetFrame = (frame) => {
+    if (!frame) return;
+    frame.style.setProperty("--z", "1");
+    frame.style.setProperty("--ox", "50%");
+    frame.style.setProperty("--oy", "50%");
+    const spot = frame.querySelector(".spot");
+    if (spot) spot.hidden = true;
+  };
+  const showSpot = (frame, spot) => {
+    if (!frame || !spot) return;
+    frame.style.setProperty("--z", String(spot.z));
+    frame.style.setProperty("--ox", `${spot.x}%`);
+    frame.style.setProperty("--oy", `${spot.y}%`);
+    const ring = frame.querySelector(".spot");
+    if (!ring) return;
+    ring.hidden = false;
+    ring.style.width = `${spot.w}%`;
+    ring.style.height = `${spot.h}%`;
+    ring.style.borderRadius = spot.round ? "50%" : "14px";
+  };
+  let explainTimer = 0;
+  let explainIndex = 0;
+  const stopExplain = () => {
+    window.clearInterval(explainTimer);
+    explainTimer = 0;
+  };
+  const focusNote = (item) => {
+    if (!item || !sheetNotes) return;
+    [...sheetNotes.children].forEach((el) => el.classList.toggle("now", el === item));
+    const spot = spots[item.dataset.sketch]?.[item.dataset.part];
+    const figure = sheetImg?.closest("figure");
+    if (!figure || !spot) return;
+    if (figure.dataset.stage === "pencil") {
+      resetFrame(figure.querySelector(".pencil.badge .zoom-frame"));
+      resetFrame(figure.querySelector(".pencil.mark .zoom-frame"));
+      showSpot(figure.querySelector(`.pencil.${item.dataset.sketch} .zoom-frame`), spot);
+      figure.dataset.focus = item.dataset.sketch;
+      return;
+    }
+    showSpot(document.getElementById("sheetFrame"), spot);
+  };
+  const startExplain = () => {
+    stopExplain();
+    if (reduce || !sheetNotes || sheetNotes.children.length < 2) return;
+    explainTimer = window.setInterval(() => {
+      const items = [...sheetNotes.children];
+      if (!items.length) return;
+      explainIndex = (explainIndex + 1) % items.length;
+      focusNote(items[explainIndex]);
+    }, 3200);
+  };
+  const showSheet = (key) => {
+    const data = sketchSheets[key];
+    if (!data || !sheetImg) return;
+    sheetKicker.textContent = data.kicker;
+    sheetTitle.textContent = data.title;
+    sheetLede.textContent = data.lede;
+    sheetImg.src = data.src;
+    sheetImg.alt = data.alt;
+    const figure = sheetImg.closest("figure");
+    if (figure) {
+      figure.dataset.stage = data.stage || "";
+      figure.dataset.focus = data.focus || "";
+    }
+    partTrack?.replaceChildren();
+    (data.track || []).forEach(([name, state]) => {
+      const item = document.createElement("li");
+      item.textContent = name;
+      if (state) item.className = state;
+      partTrack?.append(item);
+    });
+    sheetNotes.replaceChildren();
+    data.notes.forEach(([name, text, sketch, part]) => {
+      const item = document.createElement("li");
+      const label = document.createElement("b");
+      const copy = document.createElement("span");
+      label.textContent = name;
+      copy.textContent = text;
+      item.dataset.sketch = sketch || "";
+      item.dataset.part = part || "";
+      item.append(label, copy);
+      sheetNotes.append(item);
+    });
+    document.querySelectorAll(".sheet-step").forEach((step) => {
+      step.classList.toggle("active", step.dataset.sheet === key);
+    });
+    explainIndex = 0;
+    focusNote(sheetNotes.firstElementChild);
+    startExplain();
+  };
+  document.getElementById("sketchView")?.addEventListener("click", (event) => {
+    const note = event.target.closest(".sheet-notes li");
+    if (note) {
+      explainIndex = [...sheetNotes.children].indexOf(note);
+      stopExplain();
+      focusNote(note);
+      return;
+    }
+    const step = event.target.closest(".sheet-step");
+    if (!step) return;
+    showSheet(step.dataset.sheet);
   });
-  try {
-    localStorage.setItem(FEEDBACK_KEY, JSON.stringify(entries.slice(-50)));
-  } catch {
-    /* storage unavailable */
-  }
-  renderFeedback();
-  setNote(feedbackForm, "Thank you for your feedback!");
-  showToast("Feedback submitted");
-  feedbackForm.reset();
-});
+  sheetNotes?.addEventListener("pointerover", (event) => {
+    const note = event.target.closest("li");
+    if (!note || !sheetNotes.contains(note)) return;
+    stopExplain();
+    focusNote(note);
+  });
+  sheetNotes?.addEventListener("pointerleave", () => startExplain());
+  showSheet("mark");
+  document.getElementById("sheetZoom")?.addEventListener("click", () => {
+    const figure = sheetImg?.closest("figure");
+    if (figure?.dataset.stage === "pencil") {
+      const pick = figure.dataset.focus === "badge" ? ".pencil.badge img" : ".pencil.mark img";
+      figure.querySelector(pick)?.click();
+      return;
+    }
+    sheetImg?.click();
+  });
 
-renderFeedback();
+  document.getElementById("logoSteps")?.addEventListener("click", (event) => {
+    const step = event.target.closest(".step");
+    if (!step || !cube) return;
+    const steps = [...document.querySelectorAll("#logoSteps .step")];
+    const next = steps.indexOf(step);
+    if (next < 0) return;
+    steps.forEach((el) => el.classList.toggle("active", el === step));
+    let delta = next - cubeFace();
+    if (delta > 2) delta -= 4;
+    if (delta < -2) delta += 4;
+    cubeTurn += delta;
+    cube.style.setProperty("--turn", String(cubeTurn));
+  });
+
+  document.querySelectorAll("[data-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const value = button.dataset.copy;
+      const row = button.closest(".dot-row");
+      if (row) {
+        const side = row.querySelector(".color-side");
+        const swatch = side.querySelector(".color-side-swatch");
+        const label = side.querySelector(".color-side-label");
+        row.querySelectorAll(".dots button").forEach((el) => el.classList.toggle("active", el === button));
+        swatch.style.background = value;
+        label.innerHTML = `${button.dataset.name || "Color"}<br><small>${value}</small>`;
+        side.hidden = true;
+        void side.offsetWidth;
+        side.hidden = false;
+      }
+      try {
+        await navigator.clipboard.writeText(value);
+        if (!row) showToast(`Copied ${value}`);
+      } catch {
+        if (!row) showToast("Could not copy");
+      }
+    });
+  });
+
+  document.getElementById("copyCaption")?.addEventListener("click", async () => {
+    const text = document.getElementById("captionText")?.textContent?.trim() || "";
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast("Caption copied");
+    } catch {
+      showToast("Could not copy");
+    }
+  });
+
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+  let scrollY = 0;
+
+  const openLightbox = (src, alt) => {
+    if (!lightbox || !lightboxImg) return;
+    scrollY = window.scrollY;
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || "";
+    if (typeof lightbox.showModal === "function") lightbox.showModal();
+  };
+
+  document.addEventListener("click", (event) => {
+    const img = event.target.closest("[data-zoom]");
+    if (!img) return;
+    openLightbox(img.currentSrc || img.src, img.alt);
+  });
+
+  document.getElementById("lightboxClose")?.addEventListener("click", () => lightbox?.close());
+  lightbox?.addEventListener("click", (event) => {
+    if (event.target === lightbox) lightbox.close();
+  });
+  lightbox?.addEventListener("close", () => {
+    const y = scrollY;
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: y, behavior: "instant" });
+    });
+  });
+
+  document.querySelectorAll(".owner-links > *").forEach((icon) => {
+    icon.addEventListener("click", () => {
+      icon.classList.remove("pop");
+      void icon.offsetWidth;
+      icon.classList.add("pop");
+    });
+  });
+
+  document.getElementById("contactForm")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!form.checkValidity()) {
+      form.classList.remove("shake");
+      void form.offsetWidth;
+      form.classList.add("shake");
+      form.reportValidity();
+      return;
+    }
+    const status = document.getElementById("formStatus");
+    if (status) status.textContent = "Noted on this page only. Nothing was sent.";
+    const button = form.querySelector('button[type="submit"]');
+    if (button) {
+      button.classList.add("saved");
+      const label = button.textContent;
+      button.textContent = "Saved";
+      setTimeout(() => {
+        button.textContent = label;
+        button.classList.remove("saved");
+      }, 1400);
+    }
+    form.reset();
+  });
+
+  const look = document.getElementById("look");
+  if (look && !reduce) {
+    const room = look.querySelector(".look-room");
+    let tx = 0;
+    let ty = 0;
+    let x = 0;
+    let y = 0;
+    let inside = false;
+    let running = true;
+    let seen = false;
+    let looping = false;
+    const aim = (event) => {
+      const rect = look.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      tx = Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width - 0.5) * 2));
+      ty = Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height - 0.5) * 2));
+      inside = true;
+    };
+    look.addEventListener("pointermove", (event) => {
+      aim(event);
+      startRoom();
+    });
+    look.addEventListener("pointerleave", () => {
+      inside = false;
+      startRoom();
+    });
+    window.addEventListener("deviceorientation", (event) => {
+      if (event.gamma == null || inside) return;
+      tx = Math.max(-1, Math.min(1, event.gamma / 28));
+      ty = Math.max(-1, Math.min(1, ((event.beta || 0) - 45) / 34));
+    });
+    let last = 0;
+    const frame = (now) => {
+      if (!running || !seen) {
+        looping = false;
+        last = 0;
+        return;
+      }
+      const dt = last ? Math.min(40, now - last) : 16;
+      last = now;
+      const glide = 1 - Math.exp(-dt / 240);
+      const goalX = inside ? tx : 0;
+      const goalY = inside ? ty : 0;
+      x += (goalX - x) * glide;
+      y += (goalY - y) * glide;
+      const moving = Math.abs(goalX - x) > 0.006 || Math.abs(goalY - y) > 0.006;
+      room.style.transform = `rotateX(${(-8 - y * 10).toFixed(2)}deg) rotateY(${(x * 18).toFixed(2)}deg)`;
+      if (!inside && !moving) {
+        looping = false;
+        last = 0;
+        return;
+      }
+      requestAnimationFrame(frame);
+    };
+    const startRoom = () => {
+      if (looping || !seen || !running) return;
+      looping = true;
+      requestAnimationFrame(frame);
+    };
+    new IntersectionObserver(([entry]) => {
+      seen = entry.isIntersecting;
+      if (seen) startRoom();
+    }, { rootMargin: "160px" }).observe(look);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) running = false;
+      else {
+        running = true;
+        startRoom();
+      }
+    });
+  }
+
+  const live = document.getElementById("live");
+  const hero = document.getElementById("hero");
+  if (live && hero && !reduce) {
+    const ctx = live.getContext("2d");
+    const pointer = { x: 0.32, y: 0.42, tx: 0.32, ty: 0.42 };
+    const motes = Array.from({ length: 8 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      r: 8 + Math.random() * 18,
+      s: 0.12 + Math.random() * 0.28,
+      p: Math.random() * Math.PI * 2
+    }));
+    const steams = [
+      { x: 0.2, y: 0.58, h: 0.3 },
+      { x: 0.74, y: 0.52, h: 0.28 }
+    ];
+    let viewW = 0;
+    let viewH = 0;
+    let last = 0;
+    const fitLive = () => {
+      const rect = hero.getBoundingClientRect();
+      const dpr = 1;
+      viewW = rect.width;
+      viewH = rect.height;
+      live.width = Math.max(1, Math.floor(viewW * dpr));
+      live.height = Math.max(1, Math.floor(viewH * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    fitLive();
+    window.addEventListener("resize", fitLive);
+    window.addEventListener("pointermove", (event) => {
+      if (!heroSeen) return;
+      const rect = hero.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      pointer.tx = (event.clientX - rect.left) / rect.width;
+      pointer.ty = (event.clientY - rect.top) / rect.height;
+    });
+    let painting = true;
+    let heroSeen = true;
+    let queued = false;
+    const queuePaint = () => {
+      if (queued || !painting || !heroSeen) return;
+      queued = true;
+      requestAnimationFrame((now) => {
+        queued = false;
+        paint(now);
+      });
+    };
+    const paint = (now) => {
+      if (!painting || !heroSeen) return;
+      const dt = last ? Math.min(40, now - last) : 16;
+      last = now;
+      const glide = 1 - Math.exp(-dt / 220);
+      const seconds = now * 0.001;
+      pointer.x += (pointer.tx - pointer.x) * glide;
+      pointer.y += (pointer.ty - pointer.y) * glide;
+      ctx.clearRect(0, 0, viewW, viewH);
+      const gx = pointer.x * viewW;
+      const gy = pointer.y * viewH;
+      const glow = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.max(viewW, viewH) * 0.34);
+      glow.addColorStop(0, "rgba(184, 121, 74, 0.42)");
+      glow.addColorStop(0.45, "rgba(184, 121, 74, 0.12)");
+      glow.addColorStop(1, "rgba(184, 121, 74, 0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, viewW, viewH);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "rgba(107, 62, 46, 0.55)";
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.arc(gx, gy, 78, 0.55, Math.PI * 1.72);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(78, 42, 30, 0.35)";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(gx, gy, 68, 0.55, Math.PI * 1.72);
+      ctx.stroke();
+      [[92, -18, 9], [108, 24, 5], [-96, 30, 6], [18, -88, 4]].forEach(([dx, dy, r], index) => {
+        ctx.beginPath();
+        ctx.fillStyle = index % 2 ? "rgba(107, 62, 46, 0.55)" : "rgba(184, 121, 74, 0.7)";
+        ctx.arc(gx + dx, gy + dy, r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      steams.forEach((steam, index) => {
+        const baseX = steam.x * viewW + (pointer.x - 0.5) * 48;
+        const baseY = steam.y * viewH;
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(107, 62, 46, 0.38)";
+        ctx.lineWidth = 3;
+        let px = baseX;
+        let py = baseY;
+        ctx.moveTo(px, py);
+        for (let step = 1; step <= 8; step += 1) {
+          const t = step / 8;
+          const y = baseY - t * steam.h * viewH * 0.55;
+          const x = baseX
+            + Math.sin(seconds * 1.35 + t * 5 + index) * (8 + t * 18)
+            + (pointer.x - steam.x) * t * 70;
+          const mx = (px + x) / 2;
+          const my = (py + y) / 2;
+          ctx.quadraticCurveTo(px, py, mx, my);
+          px = x;
+          py = y;
+        }
+        ctx.lineTo(px, py);
+        ctx.stroke();
+      });
+      motes.forEach((mote, index) => {
+        mote.y -= mote.s * dt * 0.00024;
+        mote.p += dt * 0.00115;
+        if (mote.y < -0.08) {
+          mote.y = 1.06;
+          mote.x = Math.random();
+        }
+        const mx = mote.x * viewW + Math.sin(mote.p) * 16 + (pointer.x - 0.5) * 70;
+        const my = mote.y * viewH + (pointer.y - 0.5) * 24;
+        ctx.beginPath();
+        ctx.fillStyle = index % 2 ? "rgba(107, 62, 46, 0.28)" : "rgba(184, 121, 74, 0.4)";
+        ctx.arc(mx, my, mote.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      queuePaint();
+    };
+    new IntersectionObserver(([entry]) => {
+      heroSeen = entry.isIntersecting;
+      if (heroSeen) queuePaint();
+    }).observe(hero);
+    document.addEventListener("visibilitychange", () => {
+      painting = !document.hidden;
+      if (painting) queuePaint();
+    });
+    queuePaint();
+  }
+
+  if (!reduce) {
+    const loupe = document.getElementById("loupe");
+    const glass = loupe?.querySelector("img");
+    const size = 144;
+    const zoom = 2.35;
+    if (loupe && glass) {
+      const place = (frame, event) => {
+        const img = frame.querySelector("img");
+        const rect = frame.getBoundingClientRect();
+        if (!img || !rect.width || !rect.height) return;
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        if (glass.src !== img.currentSrc && glass.src !== img.src) glass.src = img.currentSrc || img.src;
+        glass.style.width = `${rect.width}px`;
+        glass.style.height = `${rect.height}px`;
+        glass.style.transform = `translate(${(size / 2 - x * zoom).toFixed(1)}px, ${(size / 2 - y * zoom).toFixed(1)}px) scale(${zoom})`;
+        loupe.style.left = `${event.clientX}px`;
+        loupe.style.top = `${event.clientY}px`;
+        loupe.hidden = false;
+        frame.classList.add("is-looking");
+      };
+      document.querySelectorAll(".space-grid .frame").forEach((frame) => {
+        frame.addEventListener("pointerenter", (event) => place(frame, event));
+        frame.addEventListener("pointermove", (event) => place(frame, event));
+        frame.addEventListener("pointerleave", () => {
+          loupe.hidden = true;
+          frame.classList.remove("is-looking");
+        });
+      });
+    }
+  }
+
+  initRises();
+  setScroll(window.scrollY);
+})();

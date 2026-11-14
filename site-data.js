@@ -11,29 +11,28 @@ window.SITE_DATA = {
   // price: number in PHP (₱).
   // Items follow the Pages & Pour product catalog.
   menu: [
-    { category: "books", name: "Novels", description: "", price: 299, image: "assets/products/book-secrets-lost-woods.png" },
-    { category: "books", name: "Review Books", description: "", price: 450, image: "assets/products/book-education-challenges.png" },
-    { category: "books", name: "Journals", description: "", price: 199, image: "assets/products/journal-leather.jpg" },
-    { category: "books", name: "Notebooks", description: "", price: 89, image: "assets/products/book-extra-02.jpg" },
-    { category: "books", name: "Bookmarks", description: "", price: 49, image: "assets/products/bookmark-set.png" },
-    { category: "books", name: "Pens", description: "", price: 35, image: "assets/products/stationery-flatlay.jpg" },
+    { category: "books", name: "Roast & Reason", description: "A Philosophy of Coffee", price: 299, image: "assets/products/books/roast-and-reason.png" },
+    { category: "books", name: "Terroir & Tales", description: "A Cultural Journey of Coffee and Lore", price: 320, image: "assets/products/books/terroir-and-tales.png" },
+    { category: "books", name: "Steeped in Stories", description: "", price: 289, image: "assets/products/books/steeped-in-stories.png" },
+    { category: "books", name: "Sip & Scroll", description: "An Anthology of Café Writing", price: 275, image: "assets/products/books/sip-and-scroll.png" },
+    { category: "books", name: "Cultivate & Brew", description: "A Journal of Growth and Coffee", price: 249, image: "assets/products/books/cultivate-and-brew.png" },
 
-    { category: "coffee", name: "Iced Latte", description: "", price: 140, image: "assets/products/coffee-iced-latte.jpg" },
-    { category: "coffee", name: "Caramel Macchiato", description: "", price: 160, image: "assets/products/coffee-caramel-drizzle.jpg" },
-    { category: "coffee", name: "Café Mocha", description: "", price: 155, image: "assets/products/coffee-mocha.jpg" },
-    { category: "coffee", name: "Spanish Latte", description: "", price: 150, image: "assets/products/coffee-spanish-latte.jpg" },
-    { category: "coffee", name: "Hot Cappuccino", description: "", price: 130, image: "assets/products/hot-coffee.png" },
+    { category: "coffee", name: "Iced Latte", description: "", price: 140, image: "assets/products/drinks/iced-latte.jpg" },
+    { category: "coffee", name: "Caramel Macchiato", description: "", price: 160, image: "assets/products/drinks/caramel-macchiato.jpg" },
+    { category: "coffee", name: "Café Mocha", description: "", price: 155, image: "assets/products/drinks/mocha.jpg" },
+    { category: "coffee", name: "Spanish Latte", description: "", price: 150, image: "assets/products/drinks/spanish-latte.jpg" },
+    { category: "coffee", name: "Hot Cappuccino", description: "", price: 130, image: "assets/products/drinks/hot-coffee.png" },
 
-    { category: "non-coffee", name: "Matcha Latte", description: "", price: 150, image: "assets/products/coffee-caramel.jpg" },
-    { category: "non-coffee", name: "Milk Tea", description: "", price: 120, image: "assets/products/coffee-spanish-latte.jpg" },
-    { category: "non-coffee", name: "Chocolate Drink", description: "", price: 130, image: "assets/products/iced-coffee.png" },
-    { category: "non-coffee", name: "Fruit Tea", description: "", price: 110, image: "assets/products/coffee-iced-latte.jpg" },
+    { category: "non-coffee", name: "Matcha Latte", description: "", price: 150, image: "assets/products/drinks/caramel.jpg" },
+    { category: "non-coffee", name: "Milk Tea", description: "", price: 120, image: "assets/products/drinks/spanish-latte.jpg" },
+    { category: "non-coffee", name: "Chocolate Drink", description: "", price: 130, image: "assets/products/drinks/iced-coffee.png" },
+    { category: "non-coffee", name: "Fruit Tea", description: "", price: 110, image: "assets/products/drinks/iced-latte.jpg" },
 
-    { category: "pastries", name: "Croissants", description: "", price: 85, image: "assets/products/pastry-croissant.jpg" },
-    { category: "pastries", name: "Brownies", description: "", price: 75, image: "assets/products/pastry-chocolate-cake.jpg" },
-    { category: "pastries", name: "Cookies", description: "", price: 55, image: "assets/products/pastry-cookies.jpg" },
-    { category: "pastries", name: "Cinnamon Rolls", description: "", price: 95, image: "assets/products/pastry-cinnamon-rolls.jpg" },
-    { category: "pastries", name: "Sandwiches", description: "", price: 145, image: "assets/products/croissant-sandwich.png" },
+    { category: "pastries", name: "Croissants", description: "", price: 85, image: "assets/products/food/croissant.jpg" },
+    { category: "pastries", name: "Brownies", description: "", price: 75, image: "assets/products/food/chocolate-cake.jpg" },
+    { category: "pastries", name: "Cookies", description: "", price: 55, image: "assets/products/food/cookies.jpg" },
+    { category: "pastries", name: "Cinnamon Rolls", description: "", price: 95, image: "assets/products/food/cinnamon-rolls.jpg" },
+    { category: "pastries", name: "Sandwiches", description: "", price: 145, image: "assets/products/food/sandwich.png" },
   ],
 
   contact: {

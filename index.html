@@ -3,96 +3,536 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pages & Pour — An Educational Bookstore with a Coffee Shop</title>
-  <meta name="description" content="Pages & Pour is an educational bookstore with a coffee shop and study spot: books, school materials, and a comfortable place to learn, all in one place. One Place. Every Page. Every Pour." />
-  <link rel="icon" href="assets/logo-mark-clear.png" />
+  <title>Pages & Pour — Brand Portfolio</title>
+  <meta name="description" content="Pages & Pour is an educational bookstore with a coffee shop and study spot. One Place. Every Page. Every Pour." />
+  <link rel="icon" href="assets/logos/mark-clear.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=18" />
+  <link rel="stylesheet" href="styles.css?v=86" />
 </head>
-<body>
+<body class="loading">
+  <div class="loader" id="loader" style="--pour:8" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8" aria-label="Loading Pages and Pour">
+    <div class="loader-stage">
+      <span class="loader-glow" aria-hidden="true"></span>
+      <span class="loader-ring" aria-hidden="true"></span>
+      <span class="loader-ring loader-ring-2" aria-hidden="true"></span>
+      <div class="loader-mark" aria-hidden="true">
+        <span class="loader-ghost"></span>
+        <span class="loader-fill"></span>
+      </div>
+    </div>
+    <p class="loader-name">Pages &amp; Pour</p>
+    <span class="loader-rule" aria-hidden="true"></span>
+    <p class="loader-tag">One Place. Every Page. Every Pour.</p>
+    <p class="loader-status" id="loaderStatus" role="status">Opening the page</p>
+  </div>
+  <div class="atmosphere" aria-hidden="true">
+    <div class="drift" data-depth="0.16">
+      <span class="bg-mark" style="--x:4%; --y:16%; --s:200px; --d:26s"></span>
+      <span class="bg-mark" style="--x:72%; --y:58%; --s:240px; --d:34s"></span>
+      <span class="bg-mark" style="--x:58%; --y:8%; --s:150px; --d:30s"></span>
+    </div>
+    <div class="drift" data-depth="0.36">
+      <span class="bg-ring" style="--x:10%; --y:68%; --s:280px; --d:42s"></span>
+      <span class="bg-ring" style="--x:64%; --y:30%; --s:190px; --d:48s"></span>
+    </div>
+  </div>
   <a class="skip-link" href="#top">Skip to content</a>
   <header class="nav">
     <div class="nav-inner">
       <a class="brand" href="#top">
-        <img src="assets/logo-mark-clear.png" alt="Pages & Pour mark" />
+        <img src="assets/logos/mark-clear.png" alt="" />
         Pages & Pour
       </a>
-      <span class="progress" id="progress" aria-hidden="true" style="--scroll: 0" title="Scroll progress">
-        <svg class="progress-dial" viewBox="0 0 40 40" focusable="false">
-          <path class="progress-track" d="M12.5 32.99 A15 15 0 1 1 27.5 32.99" pathLength="100" />
-          <path class="progress-arc" d="M12.5 32.99 A15 15 0 1 1 27.5 32.99" pathLength="100" />
-          <line class="progress-needle" x1="20" y1="20" x2="20" y2="9" />
-          <circle class="progress-hub" cx="20" cy="20" r="2.6" />
-        </svg>
-      </span>
-      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+      <span class="dial" style="--scroll: 0" title="Scroll progress" aria-hidden="true"><span class="dial-fill"></span></span>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
         <span></span>
       </button>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#concept">Concept</a></li>
-        <li><a href="#spaces">Spaces</a></li>
-        <li><a href="#offerings">Offerings</a></li>
-        <li><a href="#menu">Menu</a></li>
-        <li><a href="#gallery">Gallery</a></li>
-        <li><a href="#owners">Owners</a></li>
-        <li><a href="#logo">Logo</a></li>
-        <li><a href="#post">Brand Post</a></li>
-        <li><a href="#engagement">Engagement</a></li>
-        <li><a href="#poster">Poster</a></li>
-        <li><a class="nav-cta" href="#visit">Visit</a></li>
-      </ul>
+      <nav id="navLinks" aria-label="Page">
+        <a href="#concept">Concept</a>
+        <a href="#spaces">Spaces</a>
+        <a href="#products">Products</a>
+        <a href="#owners">Owners</a>
+        <a href="#logo">Logo</a>
+        <a href="#post">Post</a>
+        <a href="#poster">Poster</a>
+        <a href="#visit">Visit</a>
+      </nav>
     </div>
   </header>
 
   <main id="top">
-    <div data-include="sections/hero.html"></div>
-    <div data-include="sections/concept.html"></div>
-    <div data-include="sections/tagline.html"></div>
-    <div data-include="sections/spaces.html"></div>
-    <div data-include="sections/offerings.html"></div>
-    <div data-include="sections/menu.html"></div>
-    <div data-include="sections/gallery.html"></div>
-    <div data-include="sections/owners.html"></div>
-    <div data-include="sections/market.html"></div>
-    <div data-include="sections/logo.html"></div>
-    <div data-include="sections/post.html"></div>
-    <div data-include="sections/engagement.html"></div>
-    <div data-include="sections/poster.html"></div>
-    <div data-include="sections/visit.html"></div>
-    <div data-include="sections/feedback.html"></div>
+    <section class="hero" id="hero">
+      <canvas class="live" id="live" aria-hidden="true"></canvas>
+      <div class="hero-copy">
+        <p class="eyebrow">An Educational Bookstore with a Coffee Shop</p>
+        <h1><span class="word">Pages</span> <span class="amp">&</span><br /><span class="word word-2">Pour</span></h1>
+        <span class="hero-line" aria-hidden="true"></span>
+        <p class="lede">Pages for books, reading, and learning. Pour for coffee, tea, and other drinks. One place for all of it.</p>
+        <div class="actions">
+          <a class="btn" href="#products">See the shelf</a>
+          <a class="btn btn-ghost" href="#concept">The concept</a>
+        </div>
+        <p class="meta">Est. 2026 · 34 Kape St., Brgy. Bookelya</p>
+      </div>
+      <div class="hero-seal" id="heroSeal">
+        <div class="seal-motion">
+          <div class="seal-plate">
+            <img src="assets/logos/seal-clear.png" alt="Pages & Pour circular seal" />
+          </div>
+        </div>
+      </div>
+      <div class="pal" aria-hidden="true">
+        <div class="pal-body">
+          <span class="pal-steam"><i></i><i></i></span>
+          <span class="pal-arm"></span>
+          <span class="pal-cup">
+            <i class="pal-eye"></i>
+            <i class="pal-eye"></i>
+            <i class="pal-smile"></i>
+          </span>
+          <span class="pal-book"></span>
+        </div>
+      </div>
+      <div class="clothesline" aria-hidden="true">
+        <div class="wire">
+          <svg class="cord-svg" viewBox="0 0 1000 90" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 14 C 180 18, 340 46, 500 50 S 820 18, 1000 14" fill="none" stroke="#6b3e2e" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+          </svg>
+          <div class="peg" style="--i:0; --drop:6px; left:10%"><i class="pin"></i><img src="assets/products/books/roast-and-reason.png" alt="" /></div>
+          <div class="peg" style="--i:1; --drop:16px; left:30%"><i class="pin"></i><img src="assets/products/books/terroir-and-tales.png" alt="" /></div>
+          <div class="peg" style="--i:2; --drop:22px; left:50%"><i class="pin"></i><img src="assets/products/books/steeped-in-stories.png" alt="" /></div>
+          <div class="peg" style="--i:3; --drop:16px; left:70%"><i class="pin"></i><img src="assets/products/books/sip-and-scroll.png" alt="" /></div>
+          <div class="peg" style="--i:4; --drop:6px; left:90%"><i class="pin"></i><img src="assets/products/books/cultivate-and-brew.png" alt="" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="concept">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">PT#1 · Business concept</p>
+          <h2>Built around books and learning.</h2>
+        </div>
+        <div class="open-book">
+          <article class="leaf">
+            <p class="leaf-kicker">History</p>
+            <h3>Three needs, one place</h3>
+            <p>Pages &amp; Pour was created from a problem students and readers share: finding one place to buy books, enjoy coffee, and study. That meant moving between three spots. A bookstore for school materials, a café for food and drinks, and a library or study space for work. Libraries are quiet, but you can't eat or talk. Coffee shops are fine for a drink, but not for hours of studying. Bookstores don't let you sit at all.</p>
+            <p>Pages &amp; Pour brings those needs into one location. Customers can study, read, work, socialize, and enjoy their drinks and snacks without traveling somewhere else for each one.</p>
+            <ul class="leaf-list">
+              <li><b>Bookstore</b><span>Find a book that matches your mood.</span></li>
+              <li><b>Coffee</b><span>Take a break and enjoy every pour.</span></li>
+              <li><b>Study Space</b><span>A cozy spot for reading, studying, and getting things done.</span></li>
+            </ul>
+            <p class="folio">2</p>
+          </article>
+          <article class="leaf leaf-right">
+            <p class="leaf-kicker">A place to stay</p>
+            <h3>Welcome to Pages &amp; Pour</h3>
+            <p>Looking for a cozy place where you can enjoy coffee, discover new books, study, or simply relax? Welcome to Pages &amp; Pour!</p>
+            <p>Our bookstore and coffee shop brings together the simple things we love — good coffee, great books, and a comfortable study space. Whether you're a student looking for a quiet place to finish your work, a book lover searching for your next read, or someone who just wants to chill with a cup of coffee, Pages &amp; Pour is a place for you.</p>
+            <div class="leaf-block">
+              <p class="eyebrow">Mission</p>
+              <p>To provide students, readers, and young professionals with a comfortable and convenient place to read, study, work, and relax while enjoying a nice coffee and having convenient access to books and learning materials without having to go somewhere else for each one.</p>
+            </div>
+            <div class="leaf-block">
+              <p class="eyebrow">Vision</p>
+              <p>To become the go-to neighborhood hub for students and readers, a place beyond home and school. Known for its books, brews, and its productive and welcoming atmosphere.</p>
+            </div>
+            <p class="folio">3</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="spaces" class="band">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">The space</p>
+          <h2>Browse, sip, and stay.</h2>
+          <p>A 3-in-1 room: books to buy, coffee to drink, and a seat to study without changing locations.</p>
+        </div>
+        <div class="look" id="look">
+          <div class="look-persp">
+            <div class="look-fit">
+              <div class="look-room">
+                <span class="look-floor"></span>
+                <span class="look-wall"></span>
+                <span class="look-glow"></span>
+                <span class="look-shelf"></span>
+                <img loading="lazy" decoding="async" class="look-cover" style="--x:-168px;--rz:-8deg" src="assets/products/books/roast-and-reason.png" alt="" />
+                <img loading="lazy" decoding="async" class="look-cover" style="--x:-96px;--rz:4deg" src="assets/products/books/terroir-and-tales.png" alt="" />
+                <img loading="lazy" decoding="async" class="look-cover" style="--x:-24px;--rz:-3deg" src="assets/products/books/steeped-in-stories.png" alt="" />
+                <img loading="lazy" decoding="async" class="look-cover" style="--x:48px;--rz:6deg" src="assets/products/books/sip-and-scroll.png" alt="" />
+                <img loading="lazy" decoding="async" class="look-cover" style="--x:120px;--rz:-5deg" src="assets/products/books/cultivate-and-brew.png" alt="" />
+                <span class="look-table"></span>
+                <span class="look-open"><i></i><i></i></span>
+                <span class="look-cup"><i></i><b></b></span>
+                <span class="look-leaf"><i></i></span>
+                <span class="look-leaf look-leaf-2"><i></i></span>
+              </div>
+            </div>
+          </div>
+          <p class="look-hint">Move to look around</p>
+        </div>
+        <div class="space-grid">
+          <figure><span class="frame"><img loading="lazy" decoding="async" src="assets/spaces/pages.jpg" alt="Bookshelves at Pages & Pour" data-zoom /></span><figcaption>Pages</figcaption></figure>
+          <figure><span class="frame"><img loading="lazy" decoding="async" src="assets/spaces/pour.jpg" alt="Coffee service at Pages & Pour" data-zoom /></span><figcaption>Pour</figcaption></figure>
+          <figure><span class="frame"><img loading="lazy" decoding="async" src="assets/spaces/study-spot.jpg" alt="Study spot with bookshelves and reading nooks" data-zoom /></span><figcaption>Study spot</figcaption></figure>
+          <figure><span class="frame"><img loading="lazy" decoding="async" src="assets/spaces/counter.jpg" alt="Service counter" data-zoom /></span><figcaption>Counter</figcaption></figure>
+          <figure><span class="frame"><img loading="lazy" decoding="async" src="assets/spaces/creative-corner.jpg" alt="Creative corner" data-zoom /></span><figcaption>Creative corner</figcaption></figure>
+          <figure><span class="frame"><img loading="lazy" decoding="async" src="assets/spaces/printing.jpg" alt="Printing and photocopying" data-zoom /></span><figcaption>Printing</figcaption></figure>
+        </div>
+        <ol class="zones">
+          <li><span>01</span><div><h3>Quiet Zone</h3><p>Individual studying and reading.</p></div></li>
+          <li><span>02</span><div><h3>Group Zone</h3><p>Discussions and group projects.</p></div></li>
+          <li><span>03</span><div><h3>Reading Lounge</h3><p>Casual reading and relaxation.</p></div></li>
+          <li><span>04</span><div><h3>Creative Corner</h3><p>Writing, journaling, sketching, and school projects.</p></div></li>
+        </ol>
+        <p class="facility">Wi-Fi · Charging outlets · Printing · Photocopying</p>
+      </div>
+      <div class="tome" aria-hidden="true">
+        <div class="tome-body">
+          <span class="tome-page"></span>
+          <span class="tome-cover"><i></i><i></i><b></b></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="products">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Sample products & services</p>
+          <h2>Everything for one visit.</h2>
+        </div>
+        <div class="offer-row">
+          <article>
+            <h3>Books & school materials</h3>
+            <p>New and pre-loved books, textbooks, review guides, journals, notebooks, and school supplies.</p>
+          </article>
+          <article>
+            <h3>Study spot access</h3>
+            <p>Individual tables, group tables, quiet reading, lounge seating, outlets, and Wi-Fi.</p>
+          </article>
+          <article>
+            <h3>Printing</h3>
+            <p>Black-and-white and color printing, photocopying, scanning, and basic school-project printing.</p>
+          </article>
+          <article>
+            <h3>Membership</h3>
+            <p>Discounted drinks, printing credits, priority seating, promotions, and study-space discounts.</p>
+          </article>
+        </div>
+        <div class="filters" id="filters" role="tablist" aria-label="Menu categories"></div>
+        <div class="menu" id="menu"></div>
+      </div>
+    </section>
+
+    <section id="owners">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">The owners</p>
+          <h2>The people behind Pages & Pour.</h2>
+        </div>
+        <div class="owners">
+          <figure class="owner">
+            <span class="frame"><img loading="lazy" decoding="async" src="assets/owners/john.png" alt="Portrait of John Ruzzel V. Sansait" data-zoom /></span>
+            <figcaption>John Ruzzel V. Sansait<span class="owner-links"><a href="https://www.facebook.com/Https.rxzzxl/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14.5 8.5V6.8c0-.6.4-.7.7-.7H17V3.5l-2.3-.1C12.4 3.4 11 4.8 11 7.1v1.4H9v2.7h2V21h3.2v-9.8h2.3l.4-2.7h-2.7z"/></svg></a><span aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 3h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5zm8 1.8H8A3.2 3.2 0 0 0 4.8 8v8A3.2 3.2 0 0 0 8 19.2h8A3.2 3.2 0 0 0 19.2 16V8A3.2 3.2 0 0 0 16 4.8zM12 8.2A3.8 3.8 0 1 1 8.2 12 3.8 3.8 0 0 1 12 8.2zm0 1.6A2.2 2.2 0 1 0 14.2 12 2.2 2.2 0 0 0 12 9.8zm4.35-2.55a.95.95 0 1 1-.95.95.95.95 0 0 1 .95-.95z"/></svg></span><span aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 6.2A2.2 2.2 0 0 1 6.2 4h11.6A2.2 2.2 0 0 1 20 6.2v11.6a2.2 2.2 0 0 1-2.2 2.2H6.2A2.2 2.2 0 0 1 4 17.8zm1.7.5 6 4.2a.6.6 0 0 0 .6 0l6-4.2a.7.7 0 0 0-.4-1.2H6.1a.7.7 0 0 0-.4 1.2z"/></svg></span></span></figcaption>
+          </figure>
+          <figure class="owner">
+            <span class="frame"><img loading="lazy" decoding="async" src="assets/owners/stephanie.png" alt="Portrait of Stephanie Claire M. Caingcoy" data-zoom /></span>
+            <figcaption>Stephanie Claire M. Caingcoy<span class="owner-links"><a href="https://www.facebook.com/stclaire.caingcoy" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14.5 8.5V6.8c0-.6.4-.7.7-.7H17V3.5l-2.3-.1C12.4 3.4 11 4.8 11 7.1v1.4H9v2.7h2V21h3.2v-9.8h2.3l.4-2.7h-2.7z"/></svg></a><span aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 3h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5zm8 1.8H8A3.2 3.2 0 0 0 4.8 8v8A3.2 3.2 0 0 0 8 19.2h8A3.2 3.2 0 0 0 19.2 16V8A3.2 3.2 0 0 0 16 4.8zM12 8.2A3.8 3.8 0 1 1 8.2 12 3.8 3.8 0 0 1 12 8.2zm0 1.6A2.2 2.2 0 1 0 14.2 12 2.2 2.2 0 0 0 12 9.8zm4.35-2.55a.95.95 0 1 1-.95.95.95.95 0 0 1 .95-.95z"/></svg></span><span aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 6.2A2.2 2.2 0 0 1 6.2 4h11.6A2.2 2.2 0 0 1 20 6.2v11.6a2.2 2.2 0 0 1-2.2 2.2H6.2A2.2 2.2 0 0 1 4 17.8zm1.7.5 6 4.2a.6.6 0 0 0 .6 0l6-4.2a.7.7 0 0 0-.4-1.2H6.1a.7.7 0 0 0-.4 1.2z"/></svg></span></span></figcaption>
+          </figure>
+          <figure class="owner">
+            <span class="frame"><img loading="lazy" decoding="async" src="assets/owners/mark.png" alt="Portrait of Mark Ian Mudlong" data-zoom /></span>
+            <figcaption>Mark Ian Mudlong<span class="owner-links"><a href="https://www.facebook.com/ian.633313" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14.5 8.5V6.8c0-.6.4-.7.7-.7H17V3.5l-2.3-.1C12.4 3.4 11 4.8 11 7.1v1.4H9v2.7h2V21h3.2v-9.8h2.3l.4-2.7h-2.7z"/></svg></a><span aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 3h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5zm8 1.8H8A3.2 3.2 0 0 0 4.8 8v8A3.2 3.2 0 0 0 8 19.2h8A3.2 3.2 0 0 0 19.2 16V8A3.2 3.2 0 0 0 16 4.8zM12 8.2A3.8 3.8 0 1 1 8.2 12 3.8 3.8 0 0 1 12 8.2zm0 1.6A2.2 2.2 0 1 0 14.2 12 2.2 2.2 0 0 0 12 9.8zm4.35-2.55a.95.95 0 1 1-.95.95.95.95 0 0 1 .95-.95z"/></svg></span><span aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 6.2A2.2 2.2 0 0 1 6.2 4h11.6A2.2 2.2 0 0 1 20 6.2v11.6a2.2 2.2 0 0 1-2.2 2.2H6.2A2.2 2.2 0 0 1 4 17.8zm1.7.5 6 4.2a.6.6 0 0 0 .6 0l6-4.2a.7.7 0 0 0-.4-1.2H6.1a.7.7 0 0 0-.4 1.2z"/></svg></span></span></figcaption>
+          </figure>
+          <figure class="owner">
+            <span class="frame"><img loading="lazy" decoding="async" src="assets/owners/carlos.png" alt="Portrait of Carlos Aurelius Gervacio" data-zoom /></span>
+            <figcaption>Carlos Aurelius Gervacio<span class="owner-links"><a href="https://www.facebook.com/carlos.aurelius.gervacio" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14.5 8.5V6.8c0-.6.4-.7.7-.7H17V3.5l-2.3-.1C12.4 3.4 11 4.8 11 7.1v1.4H9v2.7h2V21h3.2v-9.8h2.3l.4-2.7h-2.7z"/></svg></a><span aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 3h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5zm8 1.8H8A3.2 3.2 0 0 0 4.8 8v8A3.2 3.2 0 0 0 8 19.2h8A3.2 3.2 0 0 0 19.2 16V8A3.2 3.2 0 0 0 16 4.8zM12 8.2A3.8 3.8 0 1 1 8.2 12 3.8 3.8 0 0 1 12 8.2zm0 1.6A2.2 2.2 0 1 0 14.2 12 2.2 2.2 0 0 0 12 9.8zm4.35-2.55a.95.95 0 1 1-.95.95.95.95 0 0 1 .95-.95z"/></svg></span><span aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 6.2A2.2 2.2 0 0 1 6.2 4h11.6A2.2 2.2 0 0 1 20 6.2v11.6a2.2 2.2 0 0 1-2.2 2.2H6.2A2.2 2.2 0 0 1 4 17.8zm1.7.5 6 4.2a.6.6 0 0 0 .6 0l6-4.2a.7.7 0 0 0-.4-1.2H6.1a.7.7 0 0 0-.4 1.2z"/></svg></span></span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="logo" class="dark">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">CT#1 · Logo design</p>
+          <h2>From two needs, one mark.</h2>
+          <p>Pages (the book) and Pour (the cup) become one icon: a mug on a volume, steam like a turning chapter.</p>
+        </div>
+        <div class="logo-layout">
+          <div class="process" id="logoSteps">
+            <button class="step active" type="button" data-logo="seal"><span>01</span><p>Start with the 3-in-1 idea: bookstore, café, study spot — one object that can carry all three.</p></button>
+            <button class="step" type="button" data-logo="mark"><span>02</span><p>Lock the cup-on-book pictorial. Put the name on the mug so the icon still reads at small sizes.</p></button>
+            <button class="step" type="button" data-logo="badge"><span>03</span><p>Build a badge lockup with EST. 2026, a leaf divider, and the line “One Place. Every Page. Every Pour.”</p></button>
+            <button class="step" type="button" data-logo="seal"><span>04</span><p>Finish with a coffee-ring seal — the stain left on a page after a long sit — as the brand frame.</p></button>
+          </div>
+          <div class="logo-stage">
+            <div class="cube" id="logoCube" style="--turn:0; --depth:170">
+              <figure class="face">
+                <img loading="lazy" decoding="async" src="assets/logos/seal.png" alt="Final circular seal logo" data-zoom />
+                <figcaption>Final seal</figcaption>
+              </figure>
+              <figure class="face">
+                <img loading="lazy" decoding="async" src="assets/logos/pictorial-mark.png" alt="Pictorial mark of cup on book" data-zoom />
+                <figcaption>Pictorial mark</figcaption>
+              </figure>
+              <figure class="face">
+                <img loading="lazy" decoding="async" src="assets/logos/badge-lockup.png" alt="Badge lockup of Pages and Pour" data-zoom />
+                <figcaption>Badge lockup</figcaption>
+              </figure>
+              <figure class="face">
+                <img loading="lazy" decoding="async" src="assets/logos/seal.png" alt="Final circular seal logo" data-zoom />
+                <figcaption>Final seal</figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <div class="sheet-view" id="sketchView">
+          <div class="sheet-nav">
+            <p class="eyebrow">Logo process</p>
+            <h3>From the sketch to the logo.</h3>
+            <p>Six sheets, in order. The parts are read off the two pencil sketches.</p>
+            <button class="sheet-step active" type="button" data-sheet="mark"><span>01</span><div><strong>Mark sketch</strong><p>The pencil drawing of the whole idea.</p></div></button>
+            <button class="sheet-step" type="button" data-sheet="badge"><span>02</span><div><strong>Badge sketch</strong><p>The name moves onto the mug.</p></div></button>
+            <button class="sheet-step" type="button" data-sheet="book"><span>03</span><div><strong>The book</strong><p>Pages. The base of the mark.</p></div></button>
+            <button class="sheet-step" type="button" data-sheet="pour"><span>04</span><div><strong>Cup and steam</strong><p>Pour. The mug is set on the book.</p></div></button>
+            <button class="sheet-step" type="button" data-sheet="name"><span>05</span><div><strong>Name and year</strong><p>Wordmark, EST. 2026, and the leaf.</p></div></button>
+            <button class="sheet-step" type="button" data-sheet="ring"><span>06</span><div><strong>Coffee ring</strong><p>The pencil ring and the tagline.</p></div></button>
+          </div>
+          <article class="sheet" id="sketchSheet">
+            <header class="sheet-top">
+              <span>Pages &amp; Pour</span>
+              <span>Logo process</span>
+              <span>One Place · Every Page · Every Pour</span>
+            </header>
+            <p class="sheet-kicker" id="sheetKicker">Sketch 01</p>
+            <h3 id="sheetTitle">Mark sketch</h3>
+            <p class="sheet-lede" id="sheetLede">The pencil drawing of the whole idea, before any piece is drawn solid.</p>
+            <ol class="part-track" id="partTrack">
+              <li class="now">Sketch</li>
+              <li>Badge</li>
+              <li>Book</li>
+              <li>Cup</li>
+              <li>Steam</li>
+              <li>Name</li>
+              <li>Year</li>
+              <li>Ring</li>
+            </ol>
+            <figure>
+              <div class="zoom-frame" id="sheetFrame">
+                <img loading="lazy" decoding="async" id="sheetImg" src="assets/logos/sketch-mark.png" alt="Sketch of the pictorial mark" data-zoom />
+                <span class="spot" hidden></span>
+              </div>
+              <div class="pencil-build">
+                <figure class="pencil badge">
+                  <div class="zoom-frame">
+                    <img loading="lazy" decoding="async" src="assets/logos/sketch-badge.png" alt="Badge sketch" data-zoom />
+                    <span class="spot" hidden></span>
+                  </div>
+                  <figcaption>Badge sketch</figcaption>
+                </figure>
+                <figure class="pencil mark">
+                  <div class="zoom-frame">
+                    <img loading="lazy" decoding="async" src="assets/logos/sketch-mark.png" alt="Mark sketch" data-zoom />
+                    <span class="spot" hidden></span>
+                  </div>
+                  <figcaption>Mark sketch</figcaption>
+                </figure>
+              </div>
+            </figure>
+            <ul class="sheet-notes" id="sheetNotes">
+              <li class="now"><b>Whole idea</b><span>Cup, book, name, year, leaf, tagline, and the coffee ring are still one pencil drawing.</span></li>
+              <li><b>Next</b><span>The badge sketch letters the name on the mug. Later sheets read each part off these two drawings.</span></li>
+            </ul>
+            <button class="sheet-zoom" id="sheetZoom" type="button">View larger</button>
+          </article>
+        </div>
+        <div class="palette-grid">
+          <div class="palette-block">
+            <p class="eyebrow">Color scheme / palette</p>
+            <div class="palette-line">
+              <div class="wire">
+                <span class="cord"></span>
+                <button class="peg" type="button" style="--i:0" data-copy="#6B3E2E"><i class="pin"></i><span class="chip" style="background:#6B3E2E"></span><span class="chip-name">Coffee Brown<br />#6B3E2E</span></button>
+                <button class="peg" type="button" style="--i:1" data-copy="#8B5A3C"><i class="pin"></i><span class="chip" style="background:#8B5A3C"></span><span class="chip-name">Mocha<br />#8B5A3C</span></button>
+                <button class="peg" type="button" style="--i:2" data-copy="#B8794A"><i class="pin"></i><span class="chip" style="background:#B8794A"></span><span class="chip-name">Caramel Latte<br />#B8794A</span></button>
+                <button class="peg" type="button" style="--i:3" data-copy="#D8BFA5"><i class="pin"></i><span class="chip" style="background:#D8BFA5"></span><span class="chip-name">Warm Beige<br />#D8BFA5</span></button>
+                <button class="peg" type="button" style="--i:4" data-copy="#F5EBDD"><i class="pin"></i><span class="chip" style="background:#F5EBDD"></span><span class="chip-name">Cream Paper<br />#F5EBDD</span></button>
+              </div>
+            </div>
+          </div>
+          <img loading="lazy" decoding="async" class="scheme" src="assets/brand/color-scheme.png?v=2" alt="Analogous warm color scheme infographic" data-zoom />
+          <div>
+            <p class="eyebrow">Typography</p>
+            <p class="type-display">Pages & Pour</p>
+            <p class="type-body">Display is Fraunces. Menus, captions, and labels are Outfit, with wide tracking on small lines such as EST. 2026.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="post">
+      <div class="wrap pair" id="postPair">
+        <figure class="artwork">
+          <img loading="lazy" decoding="async" src="assets/brand/post.png" alt="First Pages & Pour brand post" data-zoom />
+        </figure>
+        <div class="specs">
+          <p class="eyebrow">CT#2 · First ever brand post</p>
+          <h2>The first pour, on paper.</h2>
+          <p class="eyebrow">Color scheme / palette</p>
+          <div class="dot-row">
+            <div class="dots">
+              <button type="button" style="background:#8A3F38" data-copy="#8A3F38" data-name="Rust" aria-label="Rust #8A3F38"></button>
+              <button type="button" style="background:#6E3330" data-copy="#6E3330" data-name="Espresso" aria-label="Espresso #6E3330"></button>
+              <button type="button" style="background:#C4A484" data-copy="#C4A484" data-name="Steam beige" aria-label="Steam beige #C4A484"></button>
+              <button type="button" style="background:#F3E6D4" data-copy="#F3E6D4" data-name="Cream paper" aria-label="Cream paper #F3E6D4"></button>
+              <button type="button" style="background:#2B1A14" data-copy="#2B1A14" data-name="Ink" aria-label="Ink #2B1A14"></button>
+            </div>
+            <div class="color-side" hidden>
+              <span class="color-side-swatch"></span>
+              <span class="color-side-label"></span>
+            </div>
+          </div>
+          <p>Rust panel, espresso type, steam-beige watermark, cream paper. Analogous warmth, high contrast on the vertical wordmark.</p>
+          <p class="eyebrow">Typography</p>
+          <p>High-contrast serif, all caps, tight leading for “ONE PLACE. EVERY PAGE. EVERY POUR.” Side lockup in a Fraunces-style serif, pale on rust. Small caps with wide tracking for offers and the address.</p>
+          <div class="caption-box">
+            <div class="caption-head">
+              <strong>Caption</strong>
+              <button class="btn btn-ghost btn-small" type="button" id="copyCaption">Copy caption</button>
+            </div>
+            <pre id="captionText">One place. Every page. Every pour.
+
+Pages & Pour is open for long chapters and longer sips — coffee, books, and a study space in one room.
+
+Offers you: Coffee | Books | Study Space
+Visit us at 34 Kape St., Brgy. Bookelya
+
+#PagesAndPour #ReadSipCreate #StudySpot</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="engagement" class="band">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Engagement</p>
+          <h2>How the brand shows up in conversation.</h2>
+        </div>
+        <figure class="engagement-shot">
+          <img loading="lazy" decoding="async" src="assets/brand/engagement.png" alt="Pages & Pour social story with community comments" data-zoom />
+        </figure>
+        <div class="cards">
+          <figure>
+            <img loading="lazy" decoding="async" src="assets/brand/membership-card-dark.png" alt="Pages & Pour membership card, dark brown version" data-zoom />
+            <figcaption>Dark membership card</figcaption>
+          </figure>
+          <figure>
+            <img loading="lazy" decoding="async" src="assets/brand/membership-card-light.png" alt="Pages & Pour membership card, light cream version" data-zoom />
+            <figcaption>Light membership card</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="poster">
+      <div class="wrap pair" id="posterPair">
+        <div class="specs">
+          <p class="eyebrow">CT#3 · Promotional event poster</p>
+          <h2>Platter promo.</h2>
+          <p>Buy any book and get an iced drink plus croissant pairing at 20% off for a week.</p>
+          <p class="eyebrow">Color scheme / palette</p>
+          <div class="dot-row">
+            <div class="dots">
+              <button type="button" style="background:#C47A3A" data-copy="#C47A3A" data-name="Warm gold" aria-label="Warm gold #C47A3A"></button>
+              <button type="button" style="background:#8B5A3C" data-copy="#8B5A3C" data-name="Coffee brown" aria-label="Coffee brown #8B5A3C"></button>
+              <button type="button" style="background:#D4A574" data-copy="#D4A574" data-name="Caramel" aria-label="Caramel #D4A574"></button>
+              <button type="button" style="background:#F5EBDD" data-copy="#F5EBDD" data-name="Cream paper" aria-label="Cream paper #F5EBDD"></button>
+              <button type="button" style="background:#2B1A14" data-copy="#2B1A14" data-name="Ink" aria-label="Ink #2B1A14"></button>
+            </div>
+            <div class="color-side" hidden>
+              <span class="color-side-swatch"></span>
+              <span class="color-side-label"></span>
+            </div>
+          </div>
+          <p>Warm gold wash, coffee-brown tray, cream paper on the book, deep ink for type.</p>
+          <p class="eyebrow">Typography</p>
+          <p>Script display for “Platter promo.” All-caps serif for the offer. Bold stacked sans on the book cover. Clean sans on the visit sign.</p>
+        </div>
+        <figure class="artwork">
+          <img loading="lazy" decoding="async" src="assets/brand/poster.png" alt="Pages & Pour platter promo poster" data-zoom />
+        </figure>
+      </div>
+    </section>
+
+    <section id="visit">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Visit</p>
+          <h2>One location.</h2>
+        </div>
+        <div class="visit-grid">
+          <div>
+            <p class="address">34 Kape St., Brgy. Bookelya</p>
+            <p class="facility">Wi-Fi · Charging outlets · Printing · Photocopying</p>
+            <a class="btn" href="https://www.google.com/maps?q=34%20Kape%20St.%2C%20Brgy.%20Bookelya" target="_blank" rel="noopener">Get directions</a>
+          </div>
+          <div class="map">
+            <iframe title="Pages & Pour location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=34%20Kape%20St.%2C%20Brgy.%20Bookelya&output=embed"></iframe>
+          </div>
+        </div>
+        <form class="form" id="contactForm" novalidate>
+          <p class="eyebrow">Contact</p>
+          <h3>Leave a note.</h3>
+          <p class="form-note">This stays on your screen. It is not sent to a server.</p>
+          <label>Name <input name="name" required autocomplete="name" minlength="2" /></label>
+          <label>Email <input name="email" type="email" required autocomplete="email" /></label>
+          <label>Message <textarea name="message" required minlength="8" rows="4"></textarea></label>
+          <button class="btn" type="submit">Save note</button>
+          <p class="form-status" id="formStatus" role="status"></p>
+        </form>
+      </div>
+      <div class="sip" aria-hidden="true">
+        <div class="sip-body">
+          <span class="sip-cup"><i></i><i></i><b></b></span>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer class="footer reveal fade">
-    <img loading="lazy" decoding="async" src="assets/logo-mark-clear.png" alt="" />
+  <footer class="footer">
+    <img loading="lazy" decoding="async" src="assets/logos/mark-clear.png" alt="" />
     <p>Pages & Pour · An Educational Bookstore with a Coffee Shop · Est. 2026</p>
     <p>One Place. Every Page. Every Pour.</p>
-    <div class="footer-links">
-      <a href="#concept">Concept</a>
-      <a href="#spaces">Spaces</a>
-      <a href="#menu">Menu</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#visit">Visit</a>
-      <a href="#contactForm" data-action="contact">Contact</a>
-      <a href="presentation/">Brand Presentation</a>
-    </div>
-    <div class="footer-social" id="footerSocial"></div>
   </footer>
 
-  <button class="to-top" id="toTop" type="button" aria-label="Back to top">↑</button>
-  <div class="toast" id="toast" role="status"></div>
+  <div class="loupe" id="loupe" hidden>
+    <div class="loupe-glass"><img loading="lazy" decoding="async" alt="" /></div>
+    <svg class="loupe-mark" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="90" fill="none" stroke="#6b3e2e" stroke-width="8" />
+      <circle cx="100" cy="100" r="82" fill="none" stroke="#4e2a1e" stroke-width="2" opacity="0.45" />
+      <path d="M138 18c16 0 28 14 24 26-8 6-20-1-26-10-4 14-18 18-26 8 6-16 14-22 28-24z" fill="#6b3e2e" />
+      <circle cx="176" cy="52" r="8" fill="#8b5a3c" />
+      <circle cx="186" cy="38" r="4.2" fill="#4e2a1e" />
+      <circle cx="162" cy="28" r="3" fill="#b8794a" />
+      <ellipse cx="30" cy="158" rx="14" ry="7" fill="#6b3e2e" transform="rotate(-24 30 158)" />
+      <circle cx="18" cy="146" r="4.5" fill="#8b5a3c" />
+      <circle cx="42" cy="174" r="3" fill="#4e2a1e" />
+    </svg>
+  </div>
+  <p class="toast" id="toast" role="status"></p>
   <dialog class="lightbox" id="lightbox" aria-label="Image preview">
-    <button class="btn btn-small lightbox-close" type="button" id="lightboxClose">Close</button>
-    <button class="lightbox-nav prev" type="button" id="lightboxPrev" aria-label="Previous image">‹</button>
-    <figure>
-      <img loading="lazy" decoding="async" id="lightboxImg" alt="" />
-      <figcaption id="lightboxCaption"></figcaption>
-    </figure>
-    <button class="lightbox-nav next" type="button" id="lightboxNext" aria-label="Next image">›</button>
+    <button class="lightbox-close" type="button" id="lightboxClose">Close</button>
+    <img loading="lazy" decoding="async" id="lightboxImg" alt="" />
   </dialog>
 
-  <script src="site-data.js?v=14" defer></script>
-  <script src="include.js?v=26" defer></script>
+  <script src="site-data.js"></script>
+  <script src="script.js?v=51"></script>
 </body>
 </html>
